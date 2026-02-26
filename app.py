@@ -1,5 +1,5 @@
 """
-MASTER CODE DEEP SEEK LOG v.1.2
+MASTER CODE DEEP SEEK LOG v.1.3
 Userlog - Sistema de Transportes
 Autor: Aranhacorp
 """
@@ -23,7 +23,7 @@ import random
 # ================= CONFIGURAÇÃO DA PÁGINA =================
 st.set_page_config(
     page_title="Userlog - Sistema de Transportes",
-    page_icon="📆",
+    page_icon="🚚",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -84,11 +84,18 @@ st.markdown("""
         from { transform: translateY(-20px); opacity: 0; }
         to { transform: translateY(0); opacity: 1; }
     }
-    /* Centralizar imagem de logo */
+    /* Container para centralizar a imagem e dar espaçamento */
     .logo-container {
         display: flex;
         justify-content: center;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
+        padding: 0 1rem;
+    }
+    .logo-container img {
+        width: 100%;
+        max-width: 600px; /* Limita o tamanho em telas muito largas */
+        height: auto;
+        border-radius: 10px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -169,8 +176,8 @@ def mostrar_notificacoes():
                 n['lida'] = True
 
 # ================= FUNÇÃO PARA EXIBIR LOGO =================
-def exibir_logo(largura=300):
-    """Tenta carregar a imagem logistics-sunset_png.avif e exibi-la centralizada."""
+def exibir_logo():
+    """Tenta carregar a imagem logistics-sunset_png.avif e exibi-la com largura total do container."""
     caminhos_possiveis = [
         "assets/logistics-sunset_png.avif",
         "logistics-sunset_png.avif"
@@ -178,11 +185,8 @@ def exibir_logo(largura=300):
     for caminho in caminhos_possiveis:
         if os.path.exists(caminho):
             img = Image.open(caminho)
-            # Redimensionar para largura fixa (mantendo proporção)
-            proporcao = img.height / img.width
-            nova_altura = int(largura * proporcao)
-            img = img.resize((largura, nova_altura), Image.Resampling.LANCZOS)
-            st.image(img, use_column_width=False)
+            # Exibe a imagem ocupando toda a largura do container (respeitando o max-width definido no CSS)
+            st.image(img, use_column_width=True)
             return True
     return False
 
@@ -190,15 +194,15 @@ def exibir_logo(largura=300):
 def login_page():
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        # Container para centralizar a imagem
+        # Container para centralizar a imagem com espaçamento
         with st.container():
             st.markdown("<div class='logo-container'>", unsafe_allow_html=True)
-            if not exibir_logo(largura=300):
+            if not exibir_logo():
                 # Se não encontrar a imagem, mostra o título padrão
                 st.markdown("<div class='main-header'><h1>🚚 Userlog - Sistema de Transportes</h1></div>", unsafe_allow_html=True)
             st.markdown("</div>", unsafe_allow_html=True)
         
-        # Título abaixo da imagem (pode ser opcional, mas vou manter para consistência)
+        # Título abaixo da imagem (mesmo estilo do balão)
         st.markdown("<div class='main-header'><h1>Userlog - Sistema de Transportes</h1></div>", unsafe_allow_html=True)
         
         with st.form("login_form"):
@@ -220,8 +224,8 @@ def login_page():
 # ================= MENU LATERAL =================
 def menu_sidebar():
     with st.sidebar:
-        # Logo na barra lateral (menor)
-        if not exibir_logo(largura=200):
+        # Logo na barra lateral (menor, mas ainda usando largura total)
+        if not exibir_logo():
             st.markdown("""
             <div style='text-align: center; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px;'>
                 <h2 style='color: white; margin: 0;'>USERLOG</h2>
@@ -269,7 +273,7 @@ def menu_sidebar():
         st.markdown(f"""
         <div style='text-align: center; color: #666; font-size: 0.8rem;'>
             <p>🕒 {datetime.now().strftime('%d/%m/%Y %H:%M')}</p>
-            <p>MASTER CODE DEEP SEEK LOG v.1.2</p>
+            <p>MASTER CODE DEEP SEEK LOG v.1.3</p>
             <p>© 2026 - Userlog</p>
         </div>
         """, unsafe_allow_html=True)
