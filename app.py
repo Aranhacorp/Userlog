@@ -1,5 +1,5 @@
 """
-MASTER CODE DEEP SEEK LOG v.1
+MASTER CODE DEEP SEEK LOG v.1.2
 Userlog - Sistema de Transportes
 Autor: Aranhacorp
 """
@@ -23,7 +23,7 @@ import random
 # ================= CONFIGURAÇÃO DA PÁGINA =================
 st.set_page_config(
     page_title="Userlog - Sistema de Transportes",
-    page_icon="🚚",
+    page_icon="📆",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -83,6 +83,12 @@ st.markdown("""
     @keyframes slideIn {
         from { transform: translateY(-20px); opacity: 0; }
         to { transform: translateY(0); opacity: 1; }
+    }
+    /* Centralizar imagem de logo */
+    .logo-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -162,21 +168,38 @@ def mostrar_notificacoes():
                     st.info(f"**{n['titulo']}**\n\n{n['mensagem']}")
                 n['lida'] = True
 
+# ================= FUNÇÃO PARA EXIBIR LOGO =================
+def exibir_logo(largura=300):
+    """Tenta carregar a imagem logistics-sunset_png.avif e exibi-la centralizada."""
+    caminhos_possiveis = [
+        "assets/logistics-sunset_png.avif",
+        "logistics-sunset_png.avif"
+    ]
+    for caminho in caminhos_possiveis:
+        if os.path.exists(caminho):
+            img = Image.open(caminho)
+            # Redimensionar para largura fixa (mantendo proporção)
+            proporcao = img.height / img.width
+            nova_altura = int(largura * proporcao)
+            img = img.resize((largura, nova_altura), Image.Resampling.LANCZOS)
+            st.image(img, use_column_width=False)
+            return True
+    return False
+
 # ================= PÁGINA DE LOGIN =================
 def login_page():
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        st.markdown("<div class='main-header'><h1>🚚 Userlog - Sistema de Transportes</h1></div>", unsafe_allow_html=True)
+        # Container para centralizar a imagem
+        with st.container():
+            st.markdown("<div class='logo-container'>", unsafe_allow_html=True)
+            if not exibir_logo(largura=300):
+                # Se não encontrar a imagem, mostra o título padrão
+                st.markdown("<div class='main-header'><h1>🚚 Userlog - Sistema de Transportes</h1></div>", unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
         
-        # Tenta carregar o logo personalizado
-        if os.path.exists("assets/logistics-sunset_png.avif"):
-            logo = Image.open("assets/logistics-sunset_png.avif")
-            st.image(logo, width=300)
-        elif os.path.exists("logistics-sunset_png.avif"):
-            logo = Image.open("logistics-sunset_png.avif")
-            st.image(logo, width=300)
-        else:
-            st.info("ℹ️ Logo não encontrado. Envie a imagem 'logistics-sunset_png.avif' para a pasta correta.")
+        # Título abaixo da imagem (pode ser opcional, mas vou manter para consistência)
+        st.markdown("<div class='main-header'><h1>Userlog - Sistema de Transportes</h1></div>", unsafe_allow_html=True)
         
         with st.form("login_form"):
             username = st.text_input("👤 Usuário")
@@ -197,14 +220,8 @@ def login_page():
 # ================= MENU LATERAL =================
 def menu_sidebar():
     with st.sidebar:
-        # Logo na barra lateral
-        if os.path.exists("assets/logistics-sunset_png.avif"):
-            logo = Image.open("assets/logistics-sunset_png.avif")
-            st.image(logo, use_column_width=True)
-        elif os.path.exists("logistics-sunset_png.avif"):
-            logo = Image.open("logistics-sunset_png.avif")
-            st.image(logo, use_column_width=True)
-        else:
+        # Logo na barra lateral (menor)
+        if not exibir_logo(largura=200):
             st.markdown("""
             <div style='text-align: center; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px;'>
                 <h2 style='color: white; margin: 0;'>USERLOG</h2>
@@ -252,7 +269,7 @@ def menu_sidebar():
         st.markdown(f"""
         <div style='text-align: center; color: #666; font-size: 0.8rem;'>
             <p>🕒 {datetime.now().strftime('%d/%m/%Y %H:%M')}</p>
-            <p>MASTER CODE DEEP SEEK LOG v.1</p>
+            <p>MASTER CODE DEEP SEEK LOG v.1.2</p>
             <p>© 2026 - Userlog</p>
         </div>
         """, unsafe_allow_html=True)
