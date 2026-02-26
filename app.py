@@ -1,5 +1,5 @@
 """
-MASTER CODE DEEP SEEK LOG v.1.4
+MASTER CODE DEEP SEEK LOG v.1.5
 Userlog - Sistema de Transportes
 Autor: Aranhacorp
 """
@@ -23,7 +23,7 @@ import random
 # ================= CONFIGURAÇÃO DA PÁGINA =================
 st.set_page_config(
     page_title="Userlog - Sistema de Transportes",
-    page_icon="📆",
+    page_icon="🚚",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -33,7 +33,7 @@ st.markdown("""
 <style>
     /* Fundo da área principal com azul escuro transparente */
     .main > div {
-        background-color: rgba(0, 0, 139, 0.15);  /* Azul escuro com 15% de opacidade */
+        background-color: rgba(0, 0, 139, 0.15);
         padding: 1rem;
         border-radius: 10px;
     }
@@ -103,9 +103,47 @@ st.markdown("""
     }
     .logo-container img {
         width: 100%;
-        max-width: 600px; /* Limita o tamanho em telas muito largas */
+        max-width: 600px;
         height: auto;
         border-radius: 10px;
+    }
+    /* Estilo da sidebar personalizada (para a página de login) */
+    .custom-sidebar {
+        background-color: #f8f9fa;
+        padding: 2rem 1rem;
+        border-radius: 10px;
+        height: 100%;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+    .custom-sidebar h3 {
+        color: #333;
+        border-bottom: 2px solid #667eea;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    .custom-sidebar a {
+        display: block;
+        color: #555;
+        text-decoration: none;
+        padding: 0.5rem;
+        margin: 0.2rem 0;
+        border-radius: 5px;
+        transition: background 0.3s;
+    }
+    .custom-sidebar a:hover {
+        background-color: #e9ecef;
+        color: #667eea;
+    }
+    .partner-card {
+        background-color: white;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .partner-card p {
+        margin: 0.2rem 0;
+        font-size: 0.9rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -195,24 +233,55 @@ def exibir_logo():
     for caminho in caminhos_possiveis:
         if os.path.exists(caminho):
             img = Image.open(caminho)
-            # Exibe a imagem ocupando toda a largura do container (respeitando o max-width definido no CSS)
             st.image(img, use_column_width=True)
             return True
     return False
 
-# ================= PÁGINA DE LOGIN =================
+# ================= PÁGINA DE LOGIN COM SIDEBAR PERSONALIZADA =================
 def login_page():
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        # Container para centralizar a imagem com espaçamento
+    # Layout de duas colunas: sidebar (25%) e conteúdo principal (75%)
+    col_sidebar, col_main = st.columns([1, 3])
+
+    with col_sidebar:
+        # Sidebar personalizada com menu e academias parceiras
+        st.markdown("<div class='custom-sidebar'>", unsafe_allow_html=True)
+        
+        st.markdown("## MENU")
+        st.markdown("[Home](#)")
+        st.markdown("[Preços](#)")
+        st.markdown("[Cadastro](#)")
+        st.markdown("[Dashboard](#)")
+        st.markdown("[Contato](#)")
+        
+        st.markdown("---")
+        
+        st.markdown("### ACADEMIAS PARCEIRAS")
+        
+        st.markdown("""
+        <div class='partner-card'>
+            <strong>PLAY TENNIS Ibiraquera</strong>
+            <p>R. Estado de Israel, 860 - SP</p>
+            <p>(11) 97752-0488</p>
+            <p>https://www.playtennis.com.br/</p>
+        </div>
+        <div class='partner-card'>
+            <strong>TOP One Tennis</strong>
+            <p>Av. Indianópolis, 647 - SP</p>
+            <p>(11) 93236-3828</p>
+            <p>https://toponetennis.com.br/</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    with col_main:
+        # Conteúdo principal: logo e formulário de login
         with st.container():
             st.markdown("<div class='logo-container'>", unsafe_allow_html=True)
             if not exibir_logo():
-                # Se não encontrar a imagem, mostra o título padrão
                 st.markdown("<div class='main-header'><h1>🚚 Userlog - Sistema de Transportes</h1></div>", unsafe_allow_html=True)
             st.markdown("</div>", unsafe_allow_html=True)
         
-        # Título abaixo da imagem (mesmo estilo do balão)
         st.markdown("<div class='main-header'><h1>Userlog - Sistema de Transportes</h1></div>", unsafe_allow_html=True)
         
         with st.form("login_form"):
@@ -231,10 +300,9 @@ def login_page():
                 else:
                     st.error("❌ Usuário e senha obrigatórios!")
 
-# ================= MENU LATERAL =================
+# ================= MENU LATERAL (APÓS LOGIN) =================
 def menu_sidebar():
     with st.sidebar:
-        # Logo na barra lateral (menor, mas ainda usando largura total)
         if not exibir_logo():
             st.markdown("""
             <div style='text-align: center; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px;'>
@@ -283,7 +351,7 @@ def menu_sidebar():
         st.markdown(f"""
         <div style='text-align: center; color: #666; font-size: 0.8rem;'>
             <p>🕒 {datetime.now().strftime('%d/%m/%Y %H:%M')}</p>
-            <p>MASTER CODE DEEP SEEK LOG v.1.4</p>
+            <p>MASTER CODE DEEP SEEK LOG v.1.5</p>
             <p>© 2026 - Userlog</p>
         </div>
         """, unsafe_allow_html=True)
