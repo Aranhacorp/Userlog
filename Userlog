@@ -1,0 +1,757 @@
+# app.py - Arquivo principal do aplicativo
+import streamlit as st
+import pandas as pd
+import numpy as np
+from datetime import datetime, timedelta
+import hashlib
+import json
+import os
+from PIL import Image
+import qrcode
+from io import BytesIO
+import base64
+import plotly.express as px
+import plotly.graph_objects as go
+
+# Configuração da página
+st.set_page_config(
+    page_title="Userlog - Sistema de Transportes",
+    page_icon="🚚",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# CSS personalizado
+st.markdown("""
+<style>
+    .main-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 1.5rem;
+        border-radius: 10px;
+        color: white;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .status-card {
+        background-color: #f0f2f6;
+        padding: 1rem;
+        border-radius: 10px;
+        border-left: 4px solid #667eea;
+        margin-bottom: 1rem;
+    }
+    .metric-card {
+        background-color: white;
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    .success-message {
+        background-color: #d4edda;
+        color: #155724;
+        padding: 1rem;
+        border-radius: 10px;
+        border: 1px solid #c3e6cb;
+    }
+    .warning-message {
+        background-color: #fff3cd;
+        color: #856404;
+        padding: 1rem;
+        border-radius: 10px;
+        border: 1px solid #ffeeba;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# Inicialização do estado da sessão
+def init_session_state():
+    if 'logged_in' not in st.session_state:
+        st.session_state.logged_in = False
+    if 'user_type' not in st.session_state:
+        st.session_state.user_type = None
+    if 'username' not in st.session_state:
+        st.session_state.username = None
+    if 'current_page' not in st.session_state:
+        st.session_state.current_page = "login"
+    if 'clientes' not in st.session_state:
+        st.session_state.clientes = []
+    if 'motoristas' not in st.session_state:
+        st.session_state.motoristas = []
+    if 'empresas' not in st.session_state:
+        st.session_state.empresas = []
+    if 'cargas' not in st.session_state:
+        st.session_state.cargas = []
+    if 'agendamentos' not in st.session_state:
+        st.session_state.agendamentos = []
+    if 'pagamentos' not in st.session_state:
+        st.session_state.pagamentos = []
+
+init_session_state()
+
+# Funções auxiliares
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def gerar_qrcode_pix(valor, chave_pix, descricao):
+    """Gera QR Code PIX"""
+    payload = f"00020126360014BR.GOV.BCB.PIX0114{chave_pix}520400005303986540{valor:.2f}5802BR5913Userlog6008Sao Paulo62070503***6304"
+    qr = qrcode.QRCode(version=1, box_size=10, border=5)
+    qr.add_data(payload)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+    return img
+
+def format_currency(valor):
+    return f"R$ {valor:,.2f}"
+
+# Páginas do aplicativo
+def login_page():
+    col1, col2, col3 = st.columns([1, 2, 1])
+    
+    with col2:
+        st.markdown("<div class='main-header'><h1>🚚 Userlog - Sistema de Transportes</h1><p>Faça login para acessar o sistema</p></div>", unsafe_allow_html=True)
+        
+        with st.form("login_form"):
+            username = st.text_input("Usuário")
+            password = st.text_input("Senha", type="password")
+            user_type = st.selectbox("Tipo de Usuário", ["admin", "cliente", "motorista"])
+            
+            submitted = st.form_submit_button("Entrar", use_container_width=True)
+            
+            if submitted:
+                # Simulação de autenticação
+                if username and password:
+                    st.session_state.logged_in = True
+                    st.session_state.user_type = user_type
+                    st.session_state.username = username
+                    st.session_state.current_page = "dashboard"
+                    st.rerun()
+                else:
+                    st.error("Usuário e senha obrigatórios!")
+
+def dashboard():
+    st.markdown("<div class='main-header'><h1>📊 Dashboard Userlog</h1></div>", unsafe_allow_html=True)
+    
+    # Métricas principais
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.metric("Cargas Ativas", len([c for c in st.session_state.cargas if c.get('status') == 'ativa']), "↑ 2")
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.metric("Motoristas", len(st.session_state.motoristas), "↑ 1")
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.metric("Clientes", len(st.session_state.clientes), "↑ 3")
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+    with col4:
+        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        total_faturamento = sum([p.get('valor', 0) for p in st.session_state.pagamentos if p.get('status') == 'pago'])
+        st.metric("Faturamento", format_currency(total_faturamento), "↑ 15%")
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Gráficos
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader("📈 Cargas por Status")
+        if st.session_state.cargas:
+            df_cargas = pd.DataFrame(st.session_state.cargas)
+            status_count = df_cargas['status'].value_counts()
+            fig = px.pie(values=status_count.values, names=status_count.index, title="Distribuição de Cargas")
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.info("Nenhuma carga cadastrada")
+    
+    with col2:
+        st.subheader("📊 Agendamentos da Semana")
+        if st.session_state.agendamentos:
+            df_agendamentos = pd.DataFrame(st.session_state.agendamentos)
+            df_agendamentos['data'] = pd.to_datetime(df_agendamentos['data'])
+            agendamentos_por_dia = df_agendamentos.groupby(df_agendamentos['data'].dt.date).size().reset_index(name='count')
+            fig = px.bar(agendamentos_por_dia, x='data', y='count', title="Agendamentos por Dia")
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.info("Nenhum agendamento cadastrado")
+    
+    # Próximos agendamentos
+    st.subheader("📅 Próximos Agendamentos")
+    if st.session_state.agendamentos:
+        df_proximos = pd.DataFrame(st.session_state.agendamentos)
+        df_proximos = df_proximos.sort_values('data').head(5)
+        st.dataframe(df_proximos[['data', 'hora', 'cliente', 'tipo_carga', 'status']], use_container_width=True)
+    else:
+        st.info("Nenhum agendamento programado")
+
+def cadastro_clientes():
+    st.markdown("<div class='main-header'><h1>👥 Cadastro de Clientes</h1></div>", unsafe_allow_html=True)
+    
+    with st.form("form_cliente"):
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            nome = st.text_input("Nome completo")
+            cpf_cnpj = st.text_input("CPF/CNPJ")
+            email = st.text_input("E-mail")
+            telefone = st.text_input("Telefone")
+        
+        with col2:
+            endereco = st.text_area("Endereço completo")
+            cidade = st.text_input("Cidade")
+            estado = st.selectbox("Estado", ["SP", "RJ", "MG", "ES", "RS", "SC", "PR", "BA", "PE", "CE", "AM", "PA", "DF"])
+            cep = st.text_input("CEP")
+        
+        observacoes = st.text_area("Observações")
+        
+        submitted = st.form_submit_button("Cadastrar Cliente", use_container_width=True)
+        
+        if submitted:
+            novo_cliente = {
+                "id": len(st.session_state.clientes) + 1,
+                "nome": nome,
+                "cpf_cnpj": cpf_cnpj,
+                "email": email,
+                "telefone": telefone,
+                "endereco": endereco,
+                "cidade": cidade,
+                "estado": estado,
+                "cep": cep,
+                "observacoes": observacoes,
+                "data_cadastro": datetime.now().strftime("%d/%m/%Y %H:%M")
+            }
+            st.session_state.clientes.append(novo_cliente)
+            st.success("✅ Cliente cadastrado com sucesso!")
+    
+    # Lista de clientes
+    st.subheader("📋 Clientes Cadastrados")
+    if st.session_state.clientes:
+        df_clientes = pd.DataFrame(st.session_state.clientes)
+        st.dataframe(df_clientes, use_container_width=True)
+    else:
+        st.info("Nenhum cliente cadastrado")
+
+def cadastro_motoristas():
+    st.markdown("<div class='main-header'><h1>👨‍✈️ Cadastro de Motoristas</h1></div>", unsafe_allow_html=True)
+    
+    with st.form("form_motorista"):
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            nome = st.text_input("Nome completo")
+            cpf = st.text_input("CPF")
+            cnh = st.text_input("CNH")
+            categoria_cnh = st.selectbox("Categoria CNH", ["A", "B", "C", "D", "E"])
+        
+        with col2:
+            email = st.text_input("E-mail")
+            telefone = st.text_input("Telefone")
+            data_nascimento = st.date_input("Data de nascimento")
+            status = st.selectbox("Status", ["Disponível", "Em viagem", "Descanso", "Férias"])
+        
+        endereco = st.text_area("Endereço")
+        observacoes = st.text_area("Observações")
+        
+        submitted = st.form_submit_button("Cadastrar Motorista", use_container_width=True)
+        
+        if submitted:
+            novo_motorista = {
+                "id": len(st.session_state.motoristas) + 1,
+                "nome": nome,
+                "cpf": cpf,
+                "cnh": cnh,
+                "categoria_cnh": categoria_cnh,
+                "email": email,
+                "telefone": telefone,
+                "data_nascimento": data_nascimento.strftime("%d/%m/%Y"),
+                "status": status,
+                "endereco": endereco,
+                "observacoes": observacoes,
+                "data_cadastro": datetime.now().strftime("%d/%m/%Y %H:%M")
+            }
+            st.session_state.motoristas.append(novo_motorista)
+            st.success("✅ Motorista cadastrado com sucesso!")
+    
+    # Lista de motoristas
+    st.subheader("📋 Motoristas Cadastrados")
+    if st.session_state.motoristas:
+        df_motoristas = pd.DataFrame(st.session_state.motoristas)
+        st.dataframe(df_motoristas, use_container_width=True)
+    else:
+        st.info("Nenhum motorista cadastrado")
+
+def cadastro_empresas():
+    st.markdown("<div class='main-header'><h1>🏢 Cadastro de Empresas</h1></div>", unsafe_allow_html=True)
+    
+    with st.form("form_empresa"):
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            razao_social = st.text_input("Razão Social")
+            nome_fantasia = st.text_input("Nome Fantasia")
+            cnpj = st.text_input("CNPJ")
+            inscricao_estadual = st.text_input("Inscrição Estadual")
+        
+        with col2:
+            email = st.text_input("E-mail")
+            telefone = st.text_input("Telefone")
+            site = st.text_input("Site")
+            tipo_empresa = st.selectbox("Tipo de Empresa", ["Transportadora", "Cliente", "Fornecedor", "Parceiro"])
+        
+        endereco = st.text_area("Endereço completo")
+        observacoes = st.text_area("Observações")
+        
+        submitted = st.form_submit_button("Cadastrar Empresa", use_container_width=True)
+        
+        if submitted:
+            nova_empresa = {
+                "id": len(st.session_state.empresas) + 1,
+                "razao_social": razao_social,
+                "nome_fantasia": nome_fantasia,
+                "cnpj": cnpj,
+                "inscricao_estadual": inscricao_estadual,
+                "email": email,
+                "telefone": telefone,
+                "site": site,
+                "tipo_empresa": tipo_empresa,
+                "endereco": endereco,
+                "observacoes": observacoes,
+                "data_cadastro": datetime.now().strftime("%d/%m/%Y %H:%M")
+            }
+            st.session_state.empresas.append(nova_empresa)
+            st.success("✅ Empresa cadastrada com sucesso!")
+    
+    # Lista de empresas
+    st.subheader("📋 Empresas Cadastradas")
+    if st.session_state.empresas:
+        df_empresas = pd.DataFrame(st.session_state.empresas)
+        st.dataframe(df_empresas, use_container_width=True)
+    else:
+        st.info("Nenhuma empresa cadastrada")
+
+def agendamento_cargas():
+    st.markdown("<div class='main-header'><h1>📦 Agendamento de Cargas</h1></div>", unsafe_allow_html=True)
+    
+    with st.form("form_agendamento"):
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            tipo_transporte = st.selectbox("Tipo de Transporte", ["Rodoviário", "Aéreo"])
+            cliente = st.selectbox("Cliente", [c['nome'] for c in st.session_state.clientes] if st.session_state.clientes else ["Nenhum cliente cadastrado"])
+            motorista = st.selectbox("Motorista", [m['nome'] for m in st.session_state.motoristas if m['status'] == 'Disponível'] if st.session_state.motoristas else ["Nenhum motorista disponível"])
+            
+            origem = st.text_input("Local de Origem")
+            destino = st.text_input("Local de Destino")
+        
+        with col2:
+            data_agendamento = st.date_input("Data do Agendamento", min_value=datetime.now().date())
+            hora_agendamento = st.time_input("Horário")
+            
+            tipo_carga = st.selectbox("Tipo de Carga", ["Geral", "Frigorificada", "Perigosa", "Viva", "Frágil", "Granel"])
+            peso = st.number_input("Peso (kg)", min_value=0.0, step=0.1)
+            volume = st.number_input("Volume (m³)", min_value=0.0, step=0.1)
+        
+        descricao = st.text_area("Descrição da Carga")
+        observacoes = st.text_area("Observações adicionais")
+        
+        submitted = st.form_submit_button("Agendar Carga", use_container_width=True)
+        
+        if submitted:
+            novo_agendamento = {
+                "id": len(st.session_state.agendamentos) + 1,
+                "tipo_transporte": tipo_transporte,
+                "cliente": cliente,
+                "motorista": motorista if motorista != "Nenhum motorista disponível" else "Não atribuído",
+                "origem": origem,
+                "destino": destino,
+                "data": data_agendamento.strftime("%d/%m/%Y"),
+                "hora": hora_agendamento.strftime("%H:%M"),
+                "tipo_carga": tipo_carga,
+                "peso": peso,
+                "volume": volume,
+                "descricao": descricao,
+                "observacoes": observacoes,
+                "status": "agendado",
+                "data_criacao": datetime.now().strftime("%d/%m/%Y %H:%M")
+            }
+            st.session_state.agendamentos.append(novo_agendamento)
+            
+            # Criar carga associada
+            nova_carga = {
+                "id": len(st.session_state.cargas) + 1,
+                "agendamento_id": novo_agendamento["id"],
+                "cliente": cliente,
+                "motorista": motorista if motorista != "Nenhum motorista disponível" else "Não atribuído",
+                "origem": origem,
+                "destino": destino,
+                "tipo_carga": tipo_carga,
+                "peso": peso,
+                "volume": volume,
+                "status": "agendada",
+                "data_criacao": datetime.now().strftime("%d/%m/%Y %H:%M")
+            }
+            st.session_state.cargas.append(nova_carga)
+            
+            st.success("✅ Carga agendada com sucesso!")
+    
+    # Lista de agendamentos
+    st.subheader("📋 Agendamentos Realizados")
+    if st.session_state.agendamentos:
+        df_agendamentos = pd.DataFrame(st.session_state.agendamentos)
+        st.dataframe(df_agendamentos, use_container_width=True)
+    else:
+        st.info("Nenhum agendamento realizado")
+
+def pagamentos_pix():
+    st.markdown("<div class='main-header'><h1>💰 Pagamentos via PIX</h1></div>", unsafe_allow_html=True)
+    
+    col1, col2 = st.columns([1, 1])
+    
+    with col1:
+        st.subheader("Gerar Pagamento PIX")
+        
+        with st.form("form_pagamento"):
+            cliente = st.selectbox("Cliente", [c['nome'] for c in st.session_state.clientes] if st.session_state.clientes else ["Nenhum cliente cadastrado"])
+            
+            if st.session_state.cargas:
+                cargas_cliente = [c for c in st.session_state.cargas if c['cliente'] == cliente and c['status'] != 'paga']
+                carga = st.selectbox("Selecione a Carga", [f"{c['id']} - {c['origem']} → {c['destino']}" for c in cargas_cliente] if cargas_cliente else ["Nenhuma carga disponível"])
+            else:
+                carga = st.selectbox("Selecione a Carga", ["Nenhuma carga disponível"])
+            
+            valor = st.number_input("Valor (R$)", min_value=0.01, step=10.0, format="%.2f")
+            descricao = st.text_input("Descrição do Pagamento")
+            
+            submitted = st.form_submit_button("Gerar QR Code PIX", use_container_width=True)
+            
+            if submitted and valor > 0:
+                chave_pix = "userlog@transportes.com.br"  # Chave PIX da empresa
+                
+                # Gerar QR Code
+                qr_img = gerar_qrcode_pix(valor, chave_pix, descricao)
+                
+                # Converter para base64 para exibir no Streamlit
+                buffer = BytesIO()
+                qr_img.save(buffer, format="PNG")
+                img_str = base64.b64encode(buffer.getvalue()).decode()
+                
+                st.session_state.pagamento_atual = {
+                    "valor": valor,
+                    "descricao": descricao,
+                    "cliente": cliente,
+                    "carga": carga,
+                    "qr_code": img_str,
+                    "chave_pix": chave_pix
+                }
+                
+                st.success("✅ QR Code gerado com sucesso!")
+    
+    with col2:
+        if 'pagamento_atual' in st.session_state:
+            st.subheader("QR Code para Pagamento")
+            
+            # Exibir QR Code
+            st.image(f"data:image/png;base64,{st.session_state.pagamento_atual['qr_code']}", width=300)
+            
+            st.markdown(f"""
+            **Detalhes do Pagamento:**
+            - Valor: {format_currency(st.session_state.pagamento_atual['valor'])}
+            - Descrição: {st.session_state.pagamento_atual['descricao']}
+            - Cliente: {st.session_state.pagamento_atual['cliente']}
+            
+            **Chave PIX:** `{st.session_state.pagamento_atual['chave_pix']}`
+            
+            *Escaneie o QR Code ou copie a chave PIX para realizar o pagamento*
+            """)
+            
+            if st.button("Confirmar Pagamento", use_container_width=True):
+                novo_pagamento = {
+                    "id": len(st.session_state.pagamentos) + 1,
+                    "cliente": st.session_state.pagamento_atual['cliente'],
+                    "valor": st.session_state.pagamento_atual['valor'],
+                    "descricao": st.session_state.pagamento_atual['descricao'],
+                    "data": datetime.now().strftime("%d/%m/%Y %H:%M"),
+                    "status": "pago",
+                    "metodo": "PIX"
+                }
+                st.session_state.pagamentos.append(novo_pagamento)
+                
+                # Atualizar status da carga se houver
+                if st.session_state.pagamento_atual['carga'] and st.session_state.pagamento_atual['carga'] != "Nenhuma carga disponível":
+                    carga_id = int(st.session_state.pagamento_atual['carga'].split(' - ')[0])
+                    for carga in st.session_state.cargas:
+                        if carga['id'] == carga_id:
+                            carga['status'] = 'paga'
+                            break
+                
+                st.success("✅ Pagamento confirmado com sucesso!")
+                del st.session_state.pagamento_atual
+                st.rerun()
+    
+    # Histórico de pagamentos
+    st.subheader("📋 Histórico de Pagamentos")
+    if st.session_state.pagamentos:
+        df_pagamentos = pd.DataFrame(st.session_state.pagamentos)
+        st.dataframe(df_pagamentos, use_container_width=True)
+        
+        # Total de pagamentos
+        total = sum([p['valor'] for p in st.session_state.pagamentos if p['status'] == 'pago'])
+        st.info(f"💰 Total recebido: {format_currency(total)}")
+    else:
+        st.info("Nenhum pagamento realizado")
+
+def relatorios():
+    st.markdown("<div class='main-header'><h1>📊 Relatórios</h1></div>", unsafe_allow_html=True)
+    
+    tipo_relatorio = st.selectbox(
+        "Selecione o tipo de relatório",
+        ["Cargas por Período", "Pagamentos por Período", "Desempenho de Motoristas", "Faturamento por Cliente"]
+    )
+    
+    if tipo_relatorio == "Cargas por Período":
+        col1, col2 = st.columns(2)
+        with col1:
+            data_inicio = st.date_input("Data Início")
+        with col2:
+            data_fim = st.date_input("Data Fim")
+        
+        if st.button("Gerar Relatório", use_container_width=True):
+            if st.session_state.cargas:
+                df = pd.DataFrame(st.session_state.cargas)
+                
+                # Gráfico de cargas por status
+                fig1 = px.pie(df, names='status', title="Cargas por Status")
+                st.plotly_chart(fig1, use_container_width=True)
+                
+                # Gráfico de cargas por tipo
+                fig2 = px.bar(df, x='tipo_carga', title="Cargas por Tipo")
+                st.plotly_chart(fig2, use_container_width=True)
+                
+                # Tabela detalhada
+                st.dataframe(df, use_container_width=True)
+    
+    elif tipo_relatorio == "Pagamentos por Período":
+        col1, col2 = st.columns(2)
+        with col1:
+            data_inicio = st.date_input("Data Início", key="pag_inicio")
+        with col2:
+            data_fim = st.date_input("Data Fim", key="pag_fim")
+        
+        if st.button("Gerar Relatório", key="btn_pag", use_container_width=True):
+            if st.session_state.pagamentos:
+                df = pd.DataFrame(st.session_state.pagamentos)
+                
+                # Gráfico de pagamentos por dia
+                fig = px.line(df, x='data', y='valor', title="Pagamentos por Dia")
+                st.plotly_chart(fig, use_container_width=True)
+                
+                # Total do período
+                total_periodo = df['valor'].sum()
+                st.success(f"💰 Total do período: {format_currency(total_periodo)}")
+                
+                # Tabela detalhada
+                st.dataframe(df, use_container_width=True)
+
+def monitoramento():
+    st.markdown("<div class='main-header'><h1>🛰️ Monitoramento de Cargas</h1></div>", unsafe_allow_html=True)
+    
+    # Filtros
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        status_filter = st.selectbox("Status", ["Todos", "agendada", "em andamento", "entregue", "atrasada", "paga"])
+    with col2:
+        motorista_filter = st.selectbox("Motorista", ["Todos"] + [m['nome'] for m in st.session_state.motoristas])
+    with col3:
+        tipo_filter = st.selectbox("Tipo de Carga", ["Todos", "Geral", "Frigorificada", "Perigosa", "Viva", "Frágil", "Granel"])
+    
+    # Filtrar cargas
+    cargas_filtradas = st.session_state.cargas.copy()
+    
+    if status_filter != "Todos":
+        cargas_filtradas = [c for c in cargas_filtradas if c['status'] == status_filter]
+    if motorista_filter != "Todos":
+        cargas_filtradas = [c for c in cargas_filtradas if c['motorista'] == motorista_filter]
+    if tipo_filter != "Todos":
+        cargas_filtradas = [c for c in cargas_filtradas if c['tipo_carga'] == tipo_filter]
+    
+    # Cards de cargas
+    if cargas_filtradas:
+        for carga in cargas_filtradas:
+            with st.container():
+                col1, col2, col3, col4 = st.columns([2, 2, 1, 1])
+                
+                status_color = {
+                    "agendada": "🟡",
+                    "em andamento": "🔵",
+                    "entregue": "🟢",
+                    "atrasada": "🔴",
+                    "paga": "💰"
+                }.get(carga['status'], "⚪")
+                
+                with col1:
+                    st.markdown(f"**{status_color} Carga #{carga['id']}**")
+                    st.markdown(f"📦 {carga['tipo_carga']} - {carga['peso']}kg")
+                
+                with col2:
+                    st.markdown(f"📍 {carga['origem']} → {carga['destino']}")
+                    st.markdown(f"👤 {carga['cliente']}")
+                
+                with col3:
+                    st.markdown(f"🚚 {carga['motorista']}")
+                    st.markdown(f"📅 {carga['data_criacao']}")
+                
+                with col4:
+                    if carga['status'] == 'em andamento':
+                        st.markdown("⏱️ **Em rota**")
+                    elif carga['status'] == 'entregue':
+                        st.markdown("✅ **Entregue**")
+                    elif carga['status'] == 'atrasada':
+                        st.markdown("⚠️ **Atrasada**")
+                
+                st.markdown("---")
+    else:
+        st.info("Nenhuma carga encontrada com os filtros selecionados")
+
+def configuracao():
+    st.markdown("<div class='main-header'><h1>⚙️ Configurações</h1></div>", unsafe_allow_html=True)
+    
+    tab1, tab2, tab3 = st.tabs(["Empresa", "Usuários", "Sistema"])
+    
+    with tab1:
+        st.subheader("Dados da Empresa")
+        
+        with st.form("form_config_empresa"):
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                nome_empresa = st.text_input("Nome da Empresa", value="Userlog Transportes")
+                cnpj = st.text_input("CNPJ", value="12.345.678/0001-90")
+                ie = st.text_input("Inscrição Estadual", value="123.456.789.012")
+            
+            with col2:
+                email = st.text_input("E-mail", value="contato@userlog.com.br")
+                telefone = st.text_input("Telefone", value="(11) 3456-7890")
+                chave_pix = st.text_input("Chave PIX", value="userlog@transportes.com.br")
+            
+            endereco = st.text_area("Endereço", value="Av. Paulista, 1000 - São Paulo, SP")
+            
+            st.form_submit_button("Salvar Configurações", use_container_width=True)
+    
+    with tab2:
+        st.subheader("Gerenciar Usuários")
+        
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            st.markdown("**Usuários do Sistema**")
+            usuarios_data = {
+                "Usuário": ["admin", "joao.motorista", "maria.cliente"],
+                "Tipo": ["Administrador", "Motorista", "Cliente"],
+                "Status": ["Ativo", "Ativo", "Ativo"]
+            }
+            df_usuarios = pd.DataFrame(usuarios_data)
+            st.dataframe(df_usuarios, use_container_width=True)
+        
+        with col2:
+            st.markdown("**Adicionar Usuário**")
+            with st.form("form_novo_usuario"):
+                novo_usuario = st.text_input("Usuário")
+                nova_senha = st.text_input("Senha", type="password")
+                tipo_usuario = st.selectbox("Tipo", ["Administrador", "Motorista", "Cliente"])
+                
+                st.form_submit_button("Criar Usuário", use_container_width=True)
+    
+    with tab3:
+        st.subheader("Configurações do Sistema")
+        
+        with st.form("form_config_sistema"):
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                tema = st.selectbox("Tema", ["Claro", "Escuro"], index=0)
+                idioma = st.selectbox("Idioma", ["Português", "Inglês", "Espanhol"], index=0)
+                
+            with col2:
+                notificacoes = st.checkbox("Habilitar notificações", value=True)
+                backup_automatico = st.checkbox("Backup automático diário", value=True)
+            
+            horario_notificacao = st.time_input("Horário das notificações", value=datetime.strptime("08:00", "%H:%M").time())
+            
+            st.form_submit_button("Salvar Configurações", use_container_width=True)
+
+def menu_sidebar():
+    with st.sidebar:
+        st.image("https://via.placeholder.com/150x50?text=USERLOG", use_column_width=True)
+        st.markdown(f"### 👤 Usuário: {st.session_state.username}")
+        st.markdown(f"### 📋 Tipo: {st.session_state.user_type.upper()}")
+        st.markdown("---")
+        
+        # Menu principal
+        menu_options = {
+            "📊 Dashboard": "dashboard",
+            "👥 Clientes": "clientes",
+            "👨‍✈️ Motoristas": "motoristas",
+            "🏢 Empresas": "empresas",
+            "📦 Agendamentos": "agendamentos",
+            "💰 Pagamentos": "pagamentos",
+            "📈 Relatórios": "relatorios",
+            "🛰️ Monitoramento": "monitoramento",
+            "⚙️ Configurações": "config"
+        }
+        
+        for label, page in menu_options.items():
+            if st.button(label, use_container_width=True):
+                st.session_state.current_page = page
+                st.rerun()
+        
+        st.markdown("---")
+        
+        if st.button("🚪 Sair", use_container_width=True):
+            st.session_state.logged_in = False
+            st.session_state.user_type = None
+            st.session_state.username = None
+            st.session_state.current_page = "login"
+            st.rerun()
+
+# Main app
+def main():
+    if not st.session_state.logged_in:
+        login_page()
+    else:
+        menu_sidebar()
+        
+        # Roteamento das páginas
+        if st.session_state.current_page == "dashboard":
+            dashboard()
+        elif st.session_state.current_page == "clientes":
+            cadastro_clientes()
+        elif st.session_state.current_page == "motoristas":
+            cadastro_motoristas()
+        elif st.session_state.current_page == "empresas":
+            cadastro_empresas()
+        elif st.session_state.current_page == "agendamentos":
+            agendamento_cargas()
+        elif st.session_state.current_page == "pagamentos":
+            pagamentos_pix()
+        elif st.session_state.current_page == "relatorios":
+            relatorios()
+        elif st.session_state.current_page == "monitoramento":
+            monitoramento()
+        elif st.session_state.current_page == "config":
+            configuracao()
+
+if __name__ == "__main__":
+    main()
+streamlit==1.28.0
+pandas==2.1.0
+numpy==1.24.0
+plotly==5.17.0
+qrcode==7.4.2
+Pillow==10.0.0
+pip install -r requirements.txt
+streamlit run app.py
