@@ -1,5 +1,5 @@
 """
-MASTER CODE DEEP SEEK LOG v.1.5
+MASTER CODE DEEP SEEK LOG v.1.6
 Userlog - Sistema de Transportes
 Autor: Aranhacorp
 """
@@ -243,19 +243,19 @@ def login_page():
     col_sidebar, col_main = st.columns([1, 3])
 
     with col_sidebar:
-        # Sidebar personalizada com menu e academias parceiras
+        # Sidebar personalizada com menu e parceiros logísticos
         st.markdown("<div class='custom-sidebar'>", unsafe_allow_html=True)
         
         st.markdown("## MENU")
-        st.markdown("[Home](#)")
-        st.markdown("[Preços](#)")
-        st.markdown("[Cadastro](#)")
-        st.markdown("[Dashboard](#)")
+        st.markdown("[Quem somos](#)")
+        st.markdown("[Serviços](#)")
+        st.markdown("[Equipamentos](#)")
+        st.markdown("[Cotações](#)")
         st.markdown("[Contato](#)")
         
         st.markdown("---")
         
-        st.markdown("### ACADEMIAS PARCEIRAS")
+        st.markdown("### PARCEIROS LOGÍSTICOS")
         
         st.markdown("""
         <div class='partner-card'>
@@ -351,7 +351,7 @@ def menu_sidebar():
         st.markdown(f"""
         <div style='text-align: center; color: #666; font-size: 0.8rem;'>
             <p>🕒 {datetime.now().strftime('%d/%m/%Y %H:%M')}</p>
-            <p>MASTER CODE DEEP SEEK LOG v.1.5</p>
+            <p>MASTER CODE DEEP SEEK LOG v.1.6</p>
             <p>© 2026 - Userlog</p>
         </div>
         """, unsafe_allow_html=True)
