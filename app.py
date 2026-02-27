@@ -86,8 +86,8 @@ def create_tables():
         """
         CREATE TABLE IF NOT EXISTS cargas (
             id SERIAL PRIMARY KEY,
-            cliente_id INTEGER REFERENCES clientes(id),
-            motorista_id INTEGER REFERENCES motoristas(id),
+            cliente_id INTEGER REFERENCES clientes(id) ON DELETE SET NULL,
+            motorista_id INTEGER REFERENCES motoristas(id) ON DELETE SET NULL,
             origem VARCHAR(200),
             destino VARCHAR(200),
             tipo_carga VARCHAR(50),
@@ -101,8 +101,8 @@ def create_tables():
         """
         CREATE TABLE IF NOT EXISTS pagamentos (
             id SERIAL PRIMARY KEY,
-            carga_id INTEGER REFERENCES cargas(id),
-            cliente_id INTEGER REFERENCES clientes(id),
+            carga_id INTEGER REFERENCES cargas(id) ON DELETE SET NULL,
+            cliente_id INTEGER REFERENCES clientes(id) ON DELETE SET NULL,
             valor NUMERIC(10,2),
             descricao TEXT,
             data_pagamento TIMESTAMP DEFAULT NOW(),
@@ -134,6 +134,7 @@ st.markdown("""
         padding: 1rem;
         border-radius: 10px;
     }
+    /* Garantir que a sidebar permaneça com fundo claro */
     section[data-testid="stSidebar"] {
         background-color: #f0f2f6;
     }
@@ -171,6 +172,26 @@ st.markdown("""
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
     }
+    .status-card {
+        background-color: #f0f2f6;
+        padding: 1rem;
+        border-radius: 10px;
+        border-left: 4px solid #667eea;
+        margin-bottom: 1rem;
+    }
+    .success-message {
+        background-color: #d4edda;
+        color: #155724;
+        padding: 1rem;
+        border-radius: 10px;
+        border: 1px solid #c3e6cb;
+        animation: slideIn 0.5s;
+    }
+    @keyframes slideIn {
+        from { transform: translateY(-20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    /* Container para centralizar a imagem e dar espaçamento */
     .logo-container {
         display: flex;
         justify-content: center;
@@ -183,6 +204,7 @@ st.markdown("""
         height: auto;
         border-radius: 10px;
     }
+    /* Estilo da sidebar personalizada (para a página de login) */
     .custom-sidebar {
         background-color: #f8f9fa;
         padding: 2rem 1rem;
@@ -416,10 +438,22 @@ def dashboard():
     conn.close()
 
     col1, col2, col3, col4 = st.columns(4)
-    with col1: st.metric("📦 Cargas Ativas", cargas_ativas)
-    with col2: st.metric("👨‍✈️ Motoristas", total_motoristas)
-    with col3: st.metric("👥 Clientes", total_clientes)
-    with col4: st.metric("💰 Faturamento", format_currency(total_faturamento))
+    with col1:
+        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.metric("📦 Cargas Ativas", cargas_ativas)
+        st.markdown("</div>", unsafe_allow_html=True)
+    with col2:
+        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.metric("👨‍✈️ Motoristas", total_motoristas)
+        st.markdown("</div>", unsafe_allow_html=True)
+    with col3:
+        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.metric("👥 Clientes", total_clientes)
+        st.markdown("</div>", unsafe_allow_html=True)
+    with col4:
+        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.metric("💰 Faturamento", format_currency(total_faturamento))
+        st.markdown("</div>", unsafe_allow_html=True)
 
     # Gráfico de distribuição de cargas por status
     cur, conn = get_cursor()
