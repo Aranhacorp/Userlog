@@ -1,7 +1,7 @@
-streamlit==1.28.0
-pandas==2.1.0
-numpy==1.24.0
-plotly==5.17.0
-qrcode==7.4.2
-Pillow==10.0.0
-psycopg2-binary==2.9.9
+streamlit>=1.28.0
+pandas>=2.2.0
+numpy>=1.24.0
+plotly>=5.17.0
+qrcode>=7.4.2
+Pillow>=10.0.0
+psycopg2-binary>=2.9.9
