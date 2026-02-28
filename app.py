@@ -431,7 +431,7 @@ def agendamentos():
             origem = st.text_input("Origem *")
         with col2:
             destino = st.text_input("Destino *")
-            data = st.date_input("Data", min_value=datetime.now().date())
+            data = st.date_input("Data", min_value=datetime.now().date(), format="DD/MM/YYYY")
             hora = st.time_input("Horário")
             peso = st.number_input("Peso (kg)", min_value=0.0, step=0.1)
         
