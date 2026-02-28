@@ -1,5 +1,5 @@
 """
-MASTER CODE DEEP SEEK LOG v.1.4
+MASTER CODE DEEP SEEK LOG v.1.6
 Userlog - Sistema de Transportes
 Autor: Aranhacorp
 """
@@ -23,7 +23,7 @@ import random
 # ================= CONFIGURAÇÃO DA PÁGINA =================
 st.set_page_config(
     page_title="Userlog - Sistema de Transportes",
-    page_icon="🔼",
+    page_icon="📆",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -283,7 +283,7 @@ def menu_sidebar():
         st.markdown(f"""
         <div style='text-align: center; color: #666; font-size: 0.8rem;'>
             <p>🕒 {datetime.now().strftime('%d/%m/%Y %H:%M')}</p>
-            <p>MASTER CODE DEEP SEEK LOG v.1.4</p>
+            <p>MASTER CODE DEEP SEEK LOG v.1.6</p>
             <p>© 2026 - Userlog</p>
         </div>
         """, unsafe_allow_html=True)
