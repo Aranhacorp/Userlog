@@ -37,9 +37,9 @@ st.markdown("""
         padding: 1rem;
         border-radius: 10px;
     }
-    /* Garantir que a sidebar permaneça com fundo claro */
+    /* Sidebar com fundo cinza transparente */
     section[data-testid="stSidebar"] {
-        background-color: #f0f2f6;
+        background-color: rgba(240, 242, 246, 0.7);  /* Cinza claro com 70% de opacidade */
     }
     .main-header {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
