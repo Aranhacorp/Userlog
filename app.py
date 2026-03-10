@@ -1,7 +1,8 @@
 """
-USER LOG CLAUDE v.2.0
+USER LOG CLAUDE v.3.0
 Sistema de Transportes — Aranhacorp
 Visual premium, persistência JSON, imagem embutida
+Idioma padrão: Português
 """
 
 import streamlit as st
@@ -13,7 +14,7 @@ import plotly.express as px
 
 # ================= CONFIGURAÇÃO DA PÁGINA =================
 st.set_page_config(
-    page_title="USER LOG CLAUDE v.2.0",
+    page_title="USER LOG CLAUDE v.3.0",
     page_icon="🚛",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -51,7 +52,7 @@ def salvar_dados():
 # ================= TRADUÇÕES =================
 translations = {
     "pt": {
-        "app_name": "USER LOG CLAUDE v.2.0",
+        "app_name": "USER LOG CLAUDE v.3.0",
         "welcome": "Bem-vindo",
         "login": "Entrar", "logout": "Sair",
         "username": "Usuário", "password": "Senha",
@@ -169,9 +170,18 @@ translations = {
         "login_time": "🕐 {}",
         "notifications": "Notificações",
         "pagamentos": "Pagamento",
+        "atualizar_status": "Atualizar status",
+        "tab_novo": "➕ Novo",
+        "tab_lista": "📋 Lista",
+        "tab_nova": "➕ Nova",
+        "tab_historico": "📋 Histórico",
+        "buscar": "🔍",
+        "atualizar": "Atualizar",
+        "backup": "📁 Backup de dados",
+        "exportar_json": "⬇️ Exportar dados (JSON)",
     },
     "en": {
-        "app_name": "USER LOG CLAUDE v.2.0",
+        "app_name": "USER LOG CLAUDE v.3.0",
         "welcome": "Welcome",
         "login": "Login", "logout": "Logout",
         "username": "Username", "password": "Password",
@@ -289,9 +299,18 @@ translations = {
         "login_time": "🕐 {}",
         "notifications": "Notifications",
         "pagamentos": "Payment",
+        "atualizar_status": "Update status",
+        "tab_novo": "➕ New",
+        "tab_lista": "📋 List",
+        "tab_nova": "➕ New",
+        "tab_historico": "📋 History",
+        "buscar": "🔍",
+        "atualizar": "Update",
+        "backup": "📁 Data Backup",
+        "exportar_json": "⬇️ Export data (JSON)",
     },
     "es": {
-        "app_name": "USER LOG CLAUDE v.2.0",
+        "app_name": "USER LOG CLAUDE v.3.0",
         "welcome": "Bienvenido",
         "login": "Iniciar", "logout": "Salir",
         "username": "Usuario", "password": "Contraseña",
@@ -409,9 +428,18 @@ translations = {
         "login_time": "🕐 {}",
         "notifications": "Notificaciones",
         "pagamentos": "Pago",
+        "atualizar_status": "Actualizar estado",
+        "tab_novo": "➕ Nuevo",
+        "tab_lista": "📋 Lista",
+        "tab_nova": "➕ Nueva",
+        "tab_historico": "📋 Historial",
+        "buscar": "🔍",
+        "atualizar": "Actualizar",
+        "backup": "📁 Copia de seguridad",
+        "exportar_json": "⬇️ Exportar datos (JSON)",
     },
     "zh": {
-        "app_name": "USER LOG CLAUDE v.2.0",
+        "app_name": "USER LOG CLAUDE v.3.0",
         "welcome": "欢迎",
         "login": "登录", "logout": "登出",
         "username": "用户名", "password": "密码",
@@ -445,55 +473,99 @@ translations = {
         "chart_distribuicao": "货物分布",
         "chart_proximos": "即将到来",
         "recent_activities": "最近活动",
-        "no_cargas": "无货物", "no_agendamentos": "无日程",
+        "no_cargas": "无货物",
+        "no_agendamentos": "无日程",
         "no_activities": "无活动",
         "clientes_title": "客户登记",
-        "cliente_nome": "姓名 *", "cliente_cpf_cnpj": "CPF/CNPJ *",
-        "cliente_email": "邮箱 *", "cliente_telefone": "电话 *",
-        "cliente_cadastrar": "登记", "cliente_cadastrado": "✅ 登记成功！",
-        "cliente_erro": "请填写所有字段！", "clientes_lista": "客户列表",
+        "cliente_nome": "姓名 *",
+        "cliente_cpf_cnpj": "CPF/CNPJ *",
+        "cliente_email": "邮箱 *",
+        "cliente_telefone": "电话 *",
+        "cliente_cadastrar": "登记",
+        "cliente_cadastrado": "✅ 登记成功！",
+        "cliente_erro": "请填写所有字段！",
+        "clientes_lista": "客户列表",
         "motoristas_title": "司机登记",
-        "motorista_nome": "姓名 *", "motorista_cnh": "驾照 *",
-        "motorista_telefone": "电话 *", "motorista_status": "状态",
-        "status_disponivel": "可用", "status_viagem": "途中",
+        "motorista_nome": "姓名 *",
+        "motorista_cnh": "驾照 *",
+        "motorista_telefone": "电话 *",
+        "motorista_status": "状态",
+        "status_disponivel": "可用",
+        "status_viagem": "途中",
         "status_descanso": "休息",
-        "motorista_cadastrar": "登记", "motorista_cadastrado": "✅ 成功！",
+        "motorista_cadastrar": "登记",
+        "motorista_cadastrado": "✅ 成功！",
         "motoristas_lista": "司机列表",
         "empresas_title": "公司登记",
-        "empresa_razao": "公司名称 *", "empresa_fantasia": "商业名称 *",
-        "empresa_cnpj": "CNPJ *", "empresa_email": "邮箱 *",
+        "empresa_razao": "公司名称 *",
+        "empresa_fantasia": "商业名称 *",
+        "empresa_cnpj": "CNPJ *",
+        "empresa_email": "邮箱 *",
         "empresa_telefone": "电话 *",
-        "empresa_cadastrar": "登记", "empresa_cadastrada": "✅ 成功！",
+        "empresa_cadastrar": "登记",
+        "empresa_cadastrada": "✅ 成功！",
         "empresas_lista": "公司列表",
         "agendamentos_title": "货物日程",
         "ag_tipo_transporte": "运输类型",
-        "ag_rodoviario": "公路", "ag_aereo": "航空",
-        "ag_cliente": "客户", "ag_motorista": "司机",
-        "ag_origem": "出发地 *", "ag_destino": "目的地 *",
-        "ag_data": "日期", "ag_hora": "时间", "ag_peso": "重量 (kg)",
-        "ag_agendar": "安排", "ag_sucesso": "✅ 成功！",
-        "ag_erro": "请填写所有字段！", "ag_lista": "日程列表",
+        "ag_rodoviario": "公路",
+        "ag_aereo": "航空",
+        "ag_cliente": "客户",
+        "ag_motorista": "司机",
+        "ag_origem": "出发地 *",
+        "ag_destino": "目的地 *",
+        "ag_data": "日期",
+        "ag_hora": "时间",
+        "ag_peso": "重量 (kg)",
+        "ag_agendar": "安排",
+        "ag_sucesso": "✅ 成功！",
+        "ag_erro": "请填写所有字段！",
+        "ag_lista": "日程列表",
         "pagamentos_title": "PIX 付款",
-        "pag_valor": "金额 (R$)", "pag_descricao": "描述",
-        "pag_gerar": "生成二维码", "pag_chave": "PIX 密钥",
-        "pag_registrado": "✅ 成功！", "pag_erro": "请填写金额和描述",
+        "pag_valor": "金额 (R$)",
+        "pag_descricao": "描述",
+        "pag_gerar": "生成二维码",
+        "pag_chave": "PIX 密钥",
+        "pag_registrado": "✅ 成功！",
+        "pag_erro": "请填写金额和描述",
         "pag_lista": "付款历史",
-        "relatorios_title": "报告", "rel_tipo": "类型",
-        "rel_cargas": "货物", "rel_pagamentos": "付款",
-        "rel_motoristas": "司机", "rel_total_recebido": "总收入",
-        "monitoramento_title": "货物监控", "mon_status": "状态",
-        "mon_em_rota": "🟢 途中", "mon_entregue": "✅ 已交",
-        "mon_agendada": "🟡 已安排", "mon_carga": "货物",
-        "config_title": "设置", "config_dados_empresa": "公司数据",
-        "config_nome": "公司名称", "config_cnpj": "CNPJ",
+        "relatorios_title": "报告",
+        "rel_tipo": "类型",
+        "rel_cargas": "货物",
+        "rel_pagamentos": "付款",
+        "rel_motoristas": "司机",
+        "rel_total_recebido": "总收入",
+        "monitoramento_title": "货物监控",
+        "mon_status": "状态",
+        "mon_em_rota": "🟢 途中",
+        "mon_entregue": "✅ 已交",
+        "mon_agendada": "🟡 已安排",
+        "mon_carga": "货物",
+        "config_title": "设置",
+        "config_dados_empresa": "公司数据",
+        "config_nome": "公司名称",
+        "config_cnpj": "CNPJ",
         "config_chave_pix": "PIX 密钥",
-        "config_salvar": "保存", "config_sucesso": "✅ 已保存！",
+        "config_salvar": "保存",
+        "config_sucesso": "✅ 已保存！",
         "language": "语言",
-        "lang_pt": "🇧🇷 葡语", "lang_en": "🇺🇸 英语",
-        "lang_es": "🇪🇸 西班牙语", "lang_zh": "🇨🇳 中文",
-        "user_info": "👤 {}", "user_type_info": "📋 {}",
+        "lang_pt": "🇧🇷 葡语",
+        "lang_en": "🇺🇸 英语",
+        "lang_es": "🇪🇸 西班牙语",
+        "lang_zh": "🇨🇳 中文",
+        "user_info": "👤 {}",
+        "user_type_info": "📋 {}",
         "login_time": "🕐 {}",
-        "notifications": "通知", "pagamentos": "付款",
+        "notifications": "通知",
+        "pagamentos": "付款",
+        "atualizar_status": "更新状态",
+        "tab_novo": "➕ 新增",
+        "tab_lista": "📋 列表",
+        "tab_nova": "➕ 新增",
+        "tab_historico": "📋 历史",
+        "buscar": "🔍",
+        "atualizar": "更新",
+        "backup": "📁 数据备份",
+        "exportar_json": "⬇️ 导出数据 (JSON)",
     }
 }
 
@@ -530,7 +602,12 @@ section[data-testid="stSidebar"] * { color: var(--text) !important; }
 
 .stTextInput > div > div > input,
 .stNumberInput > div > div > input,
-.stSelectbox > div > div { background: var(--surface2) !important; border: 1px solid var(--border) !important; border-radius: 8px !important; color: var(--text) !important; }
+.stSelectbox > div > div {
+    background: var(--surface2) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+    color: var(--text) !important;
+}
 
 .stButton > button {
     background: linear-gradient(135deg, var(--gold), #c8840a) !important;
@@ -540,75 +617,169 @@ section[data-testid="stSidebar"] * { color: var(--text) !important; }
     transition: all 0.2s !important;
     box-shadow: 0 2px 14px rgba(232,160,32,0.2) !important;
 }
-.stButton > button:hover { transform: translateY(-2px) !important; box-shadow: 0 6px 22px rgba(232,160,32,0.35) !important; }
+.stButton > button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 22px rgba(232,160,32,0.35) !important;
+}
 
 [data-testid="metric-container"] {
-    background: var(--surface2) !important; border: 1px solid var(--border) !important;
-    border-radius: 14px !important; padding: 1.2rem 1.5rem !important;
+    background: var(--surface2) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 14px !important;
+    padding: 1.2rem 1.5rem !important;
 }
-[data-testid="metric-container"] label { color: var(--muted) !important; font-size: 0.75rem !important; text-transform: uppercase !important; letter-spacing: 0.1em !important; }
-[data-testid="metric-container"] [data-testid="stMetricValue"] { color: var(--gold) !important; font-family: 'Bebas Neue', sans-serif !important; font-size: 2.1rem !important; letter-spacing: 0.05em !important; }
+[data-testid="metric-container"] label {
+    color: var(--muted) !important;
+    font-size: 0.75rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+}
+[data-testid="metric-container"] [data-testid="stMetricValue"] {
+    color: var(--gold) !important;
+    font-family: 'Bebas Neue', sans-serif !important;
+    font-size: 2.1rem !important;
+    letter-spacing: 0.05em !important;
+}
 
-.stDataFrame { background: var(--surface2) !important; border-radius: 12px !important; border: 1px solid var(--border) !important; }
+.stDataFrame {
+    background: var(--surface2) !important;
+    border-radius: 12px !important;
+    border: 1px solid var(--border) !important;
+}
 
-.page-header { display:flex; align-items:center; gap:0.75rem; margin-bottom:1.8rem; padding-bottom:1rem; border-bottom: 1px solid var(--border); }
-.page-header h1 { font-family: 'Bebas Neue', sans-serif !important; font-size: 2rem !important; color: var(--text) !important; margin:0 !important; letter-spacing: 0.08em !important; }
-.page-header .dot { width:8px; height:8px; background:var(--gold); border-radius:50%; margin-left:auto; box-shadow: 0 0 10px var(--gold); }
+.page-header {
+    display:flex; align-items:center; gap:0.75rem;
+    margin-bottom:1.8rem; padding-bottom:1rem;
+    border-bottom: 1px solid var(--border);
+}
+.page-header h1 {
+    font-family: 'Bebas Neue', sans-serif !important;
+    font-size: 2rem !important; color: var(--text) !important;
+    margin:0 !important; letter-spacing: 0.08em !important;
+}
+.page-header .dot {
+    width:8px; height:8px; background:var(--gold);
+    border-radius:50%; margin-left:auto;
+    box-shadow: 0 0 10px var(--gold);
+}
 
 .sidebar-logo { border-radius:10px; overflow:hidden; margin-bottom:0.75rem; }
-.brand-name { font-family: 'Bebas Neue', sans-serif; font-size:1.4rem; color:var(--gold); letter-spacing:0.1em; text-align:center; margin-bottom:0.1rem; }
-.brand-sub { font-size:0.65rem; color:var(--muted); text-align:center; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:1rem; }
+.brand-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size:1.4rem; color:var(--gold);
+    letter-spacing:0.1em; text-align:center; margin-bottom:0.1rem;
+}
+.brand-sub {
+    font-size:0.65rem; color:var(--muted);
+    text-align:center; letter-spacing:0.08em;
+    text-transform:uppercase; margin-bottom:1rem;
+}
 
-.user-card { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:0.8rem 1rem; font-size:0.8rem; line-height:1.9; color:var(--text); margin-bottom:1rem; }
+.user-card {
+    background:var(--surface2); border:1px solid var(--border);
+    border-radius:10px; padding:0.8rem 1rem;
+    font-size:0.8rem; line-height:1.9; color:var(--text); margin-bottom:1rem;
+}
 
-.menu-label { font-size:0.6rem; font-weight:600; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin: 1rem 0 0.4rem 0.1rem; }
+.menu-label {
+    font-size:0.6rem; font-weight:600; letter-spacing:0.15em;
+    text-transform:uppercase; color:var(--muted); margin: 1rem 0 0.4rem 0.1rem;
+}
 
-.activity-row { display:flex; align-items:center; gap:0.75rem; padding:0.65rem 1rem; background:var(--surface2); border-radius:8px; margin-bottom:0.4rem; border-left:3px solid var(--gold); font-size:0.83rem; }
+.activity-row {
+    display:flex; align-items:center; gap:0.75rem;
+    padding:0.65rem 1rem; background:var(--surface2);
+    border-radius:8px; margin-bottom:0.4rem;
+    border-left:3px solid var(--gold); font-size:0.83rem;
+}
 .activity-row.teal { border-left-color:var(--teal); }
 
-.tag { display:inline-block; padding:0.12rem 0.55rem; border-radius:20px; font-size:0.7rem; font-weight:600; }
+.tag {
+    display:inline-block; padding:0.12rem 0.55rem;
+    border-radius:20px; font-size:0.7rem; font-weight:600;
+}
 .tag-agendada { background:rgba(232,160,32,0.12); color:var(--gold); }
+.tag-agendado { background:rgba(232,160,32,0.12); color:var(--gold); }
 .tag-em-andamento { background:rgba(0,200,160,0.12); color:var(--teal); }
 .tag-entregue { background:rgba(16,185,129,0.12); color:#10B981; }
 .tag-pago { background:rgba(16,185,129,0.12); color:#10B981; }
 .tag-cancelado { background:rgba(239,68,68,0.12); color:var(--danger); }
 
-.load-card { background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:1.1rem 1.4rem; margin-bottom:0.9rem; }
+.load-card {
+    background:var(--surface2); border:1px solid var(--border);
+    border-radius:12px; padding:1.1rem 1.4rem; margin-bottom:0.9rem;
+}
 .load-card:hover { border-color:rgba(232,160,32,0.25); }
-.load-id { font-size:0.65rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:0.2rem; }
+.load-id {
+    font-size:0.65rem; font-weight:600; letter-spacing:0.1em;
+    text-transform:uppercase; color:var(--muted); margin-bottom:0.2rem;
+}
 .load-title { font-size:0.95rem; font-weight:500; }
 
-.version-tag { text-align:center; padding:0.75rem 0 0 0; font-size:0.65rem; color:var(--muted); border-top:1px solid var(--border); margin-top:0.75rem; letter-spacing:0.04em; line-height:1.7; }
+.version-tag {
+    text-align:center; padding:0.75rem 0 0 0;
+    font-size:0.65rem; color:var(--muted);
+    border-top:1px solid var(--border); margin-top:0.75rem;
+    letter-spacing:0.04em; line-height:1.7;
+}
 
-.stTabs [data-baseweb="tab-list"] { background:var(--surface2) !important; border-radius:10px !important; padding:0.2rem !important; }
-.stTabs [data-baseweb="tab"] { border-radius:8px !important; color:var(--muted) !important; }
-.stTabs [aria-selected="true"] { background:var(--gold) !important; color:#0C0E14 !important; font-weight:600 !important; }
+.stTabs [data-baseweb="tab-list"] {
+    background:var(--surface2) !important;
+    border-radius:10px !important; padding:0.2rem !important;
+}
+.stTabs [data-baseweb="tab"] {
+    border-radius:8px !important; color:var(--muted) !important;
+}
+.stTabs [aria-selected="true"] {
+    background:var(--gold) !important;
+    color:#0C0E14 !important; font-weight:600 !important;
+}
 
-.login-brand h1 { font-family:'Bebas Neue', sans-serif !important; font-size:2.5rem !important; color:var(--gold) !important; letter-spacing:0.1em !important; margin:0.5rem 0 0 0 !important; text-align:center; }
-.login-brand p { color:var(--muted) !important; font-size:0.82rem !important; text-align:center; margin:0 !important; }
-.login-box { background:var(--surface2); border:1px solid var(--border); border-radius:16px; padding:2rem; }
+.login-brand h1 {
+    font-family:'Bebas Neue', sans-serif !important;
+    font-size:2.5rem !important; color:var(--gold) !important;
+    letter-spacing:0.1em !important; margin:0.5rem 0 0 0 !important;
+    text-align:center;
+}
+.login-brand p {
+    color:var(--muted) !important;
+    font-size:0.82rem !important;
+    text-align:center; margin:0 !important;
+}
+.login-box {
+    background:var(--surface2); border:1px solid var(--border);
+    border-radius:16px; padding:2rem;
+}
 </style>
 """, unsafe_allow_html=True)
 
 # ================= SESSION STATE =================
 def init():
     dados = carregar_dados()
+    # Idioma padrão SEMPRE português — ignora qualquer valor salvo
+    if "language" not in st.session_state:
+        st.session_state["language"] = "pt"
+
     defaults = {
-        'logged_in': False, 'user_type': None, 'username': None,
-        'current_page': "login",
-        'clientes': dados.get('clientes', []),
-        'motoristas': dados.get('motoristas', []),
-        'empresas': dados.get('empresas', []),
-        'cargas': dados.get('cargas', []),
-        'agendamentos': dados.get('agendamentos', []),
-        'pagamentos': dados.get('pagamentos', []),
-        'language': 'pt',
-        'config_empresa': dados.get('config_empresa', {
-            'nome': 'Userlog Transportes', 'cnpj': '12.345.678/0001-90',
-            'email': 'contato@userlog.com.br', 'telefone': '(11) 3456-7890',
-            'chave_pix': 'userlog@transportes.com.br', 'endereco': 'Av. Paulista, 1000 - SP'
+        "logged_in": False,
+        "user_type": None,
+        "username": None,
+        "current_page": "login",
+        "clientes": dados.get("clientes", []),
+        "motoristas": dados.get("motoristas", []),
+        "empresas": dados.get("empresas", []),
+        "cargas": dados.get("cargas", []),
+        "agendamentos": dados.get("agendamentos", []),
+        "pagamentos": dados.get("pagamentos", []),
+        "config_empresa": dados.get("config_empresa", {
+            "nome": "Userlog Transportes",
+            "cnpj": "12.345.678/0001-90",
+            "email": "contato@userlog.com.br",
+            "telefone": "(11) 3456-7890",
+            "chave_pix": "userlog@transportes.com.br",
+            "endereco": "Av. Paulista, 1000 - SP"
         }),
-        'login_time': None,
+        "login_time": None,
     }
     for k, v in defaults.items():
         if k not in st.session_state:
@@ -621,37 +792,72 @@ def fmt_currency(v):
     return f"R$ {v:,.2f}".replace(",","X").replace(".",",").replace("X",".")
 
 def page_header(icon, title):
-    st.markdown(f'''<div class="page-header"><span style="font-size:1.4rem">{icon}</span><h1>{title}</h1><div class="dot"></div></div>''', unsafe_allow_html=True)
+    st.markdown(
+        f'''<div class="page-header">
+            <span style="font-size:1.4rem">{icon}</span>
+            <h1>{title}</h1>
+            <div class="dot"></div>
+        </div>''',
+        unsafe_allow_html=True
+    )
 
 def status_tag(s):
-    cls = {"agendada":"tag-agendada","agendado":"tag-agendada","em andamento":"tag-em-andamento","entregue":"tag-entregue","pago":"tag-pago","cancelado":"tag-cancelado"}.get(s.lower(),"tag-agendada")
+    s_lower = s.lower().replace(" ", "-")
+    cls_map = {
+        "agendada": "tag-agendada",
+        "agendado": "tag-agendado",
+        "em-andamento": "tag-em-andamento",
+        "entregue": "tag-entregue",
+        "pago": "tag-pago",
+        "cancelado": "tag-cancelado",
+    }
+    cls = cls_map.get(s_lower, "tag-agendada")
     return f'<span class="tag {cls}">{s}</span>'
 
 def plotly_theme():
-    return dict(paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)',font=dict(color='#9CA3AF',family='Outfit'),margin=dict(l=10,r=10,t=30,b=10))
+    return dict(
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font=dict(color="#9CA3AF", family="Outfit"),
+        margin=dict(l=10, r=10, t=30, b=10)
+    )
 
 # ================= LOGIN =================
 def login_page():
     col_lang, _, _ = st.columns([1,3,1])
     with col_lang:
         lang_map = {"pt":"🇧🇷 PT","en":"🇺🇸 EN","es":"🇪🇸 ES","zh":"🇨🇳 ZH"}
-        sel = st.selectbox("", list(lang_map.keys()), format_func=lambda x:lang_map[x],
-                           index=list(lang_map.keys()).index(st.session_state.language),label_visibility="collapsed")
+        sel = st.selectbox(
+            "", list(lang_map.keys()),
+            format_func=lambda x: lang_map[x],
+            index=list(lang_map.keys()).index(st.session_state.language),
+            label_visibility="collapsed"
+        )
         if sel != st.session_state.language:
-            st.session_state.language = sel; st.rerun()
+            st.session_state.language = sel
+            st.rerun()
 
     st.markdown("<br>", unsafe_allow_html=True)
-    _, col2, _ = st.columns([1,1.3,1])
+    _, col2, _ = st.columns([1, 1.3, 1])
     with col2:
         st.markdown(get_logo_html(width=320), unsafe_allow_html=True)
-        st.markdown('''<div class="login-brand"><h1>USER LOG CLAUDE</h1><p>v.2.0 — Sistema de Transportes</p></div>''', unsafe_allow_html=True)
+        st.markdown(
+            '''<div class="login-brand">
+                <h1>USER LOG CLAUDE</h1>
+                <p>v.3.0 — Sistema de Transportes</p>
+            </div>''',
+            unsafe_allow_html=True
+        )
         st.markdown("<br>", unsafe_allow_html=True)
         st.markdown('<div class="login-box">', unsafe_allow_html=True)
         with st.form("lf"):
             username = st.text_input(f"👤 {t('username')}", placeholder="seu usuário")
             password = st.text_input(f"🔒 {t('password')}", type="password", placeholder="••••••••")
-            user_type = st.selectbox(f"📋 {t('user_type')}", [t('admin'),t('cliente'),t('motorista')])
-            if st.form_submit_button(t('login_button'), use_container_width=True):
+            user_type = st.selectbox(
+                f"📋 {t('user_type')}",
+                [t("admin"), t("cliente"), t("motorista")]
+            )
+            if st.form_submit_button(t("login_button"), use_container_width=True):
                 if username and password:
                     st.session_state.logged_in = True
                     st.session_state.user_type = user_type
@@ -660,300 +866,493 @@ def login_page():
                     st.session_state.login_time = datetime.now().strftime("%H:%M")
                     st.rerun()
                 else:
-                    st.error(t('login_error'))
-        st.markdown('</div>', unsafe_allow_html=True)
+                    st.error(t("login_error"))
+        st.markdown("</div>", unsafe_allow_html=True)
 
 # ================= SIDEBAR =================
 def sidebar():
     with st.sidebar:
         st.markdown('<div class="sidebar-logo">', unsafe_allow_html=True)
         st.markdown(get_logo_html(width=240), unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
         st.markdown('<div class="brand-name">USER LOG CLAUDE</div>', unsafe_allow_html=True)
-        st.markdown('<div class="brand-sub">v.2.0 · Sistema de Transportes</div>', unsafe_allow_html=True)
+        st.markdown('<div class="brand-sub">v.3.0 · Sistema de Transportes</div>', unsafe_allow_html=True)
 
         lang_map = {"pt":"🇧🇷 PT","en":"🇺🇸 EN","es":"🇪🇸 ES","zh":"🇨🇳 ZH"}
-        sel = st.selectbox(f"🌐 {t('language')}", list(lang_map.keys()),format_func=lambda x:lang_map[x],
-                           index=list(lang_map.keys()).index(st.session_state.language))
+        sel = st.selectbox(
+            f"🌐 {t('language')}",
+            list(lang_map.keys()),
+            format_func=lambda x: lang_map[x],
+            index=list(lang_map.keys()).index(st.session_state.language)
+        )
         if sel != st.session_state.language:
-            st.session_state.language = sel; st.rerun()
+            st.session_state.language = sel
+            st.rerun()
 
-        st.markdown(f'''<div class="user-card">{t("user_info").format(st.session_state.username)}<br>{t("user_type_info").format(st.session_state.user_type)}<br>{t("login_time").format(st.session_state.login_time or datetime.now().strftime("%H:%M"))}</div>''', unsafe_allow_html=True)
+        st.markdown(
+            f'''<div class="user-card">
+                {t("user_info").format(st.session_state.username)}<br>
+                {t("user_type_info").format(st.session_state.user_type)}<br>
+                {t("login_time").format(st.session_state.login_time or datetime.now().strftime("%H:%M"))}
+            </div>''',
+            unsafe_allow_html=True
+        )
 
         st.markdown('<div class="menu-label">MENU PRINCIPAL</div>', unsafe_allow_html=True)
-        for label, page in [
-            (t('menu_dashboard'),"dashboard"),(t('menu_clientes'),"clientes"),
-            (t('menu_motoristas'),"motoristas"),(t('menu_empresas'),"empresas"),
-            (t('menu_agendamentos'),"agendamentos"),(t('menu_pagamentos'),"pagamentos"),
-            (t('menu_relatorios'),"relatorios"),(t('menu_monitoramento'),"monitoramento"),
-            (t('menu_configuracoes'),"config")
-        ]:
+        menu_items = [
+            (t("menu_dashboard"), "dashboard"),
+            (t("menu_clientes"), "clientes"),
+            (t("menu_motoristas"), "motoristas"),
+            (t("menu_empresas"), "empresas"),
+            (t("menu_agendamentos"), "agendamentos"),
+            (t("menu_pagamentos"), "pagamentos"),
+            (t("menu_relatorios"), "relatorios"),
+            (t("menu_monitoramento"), "monitoramento"),
+            (t("menu_configuracoes"), "config"),
+        ]
+        for label, page in menu_items:
             if st.button(label, use_container_width=True, key=f"m_{page}"):
-                st.session_state.current_page = page; st.rerun()
+                st.session_state.current_page = page
+                st.rerun()
 
-        with st.expander(t('quick_actions')):
-            if st.button(t('new_agendamento'), use_container_width=True):
+        with st.expander(t("quick_actions")):
+            if st.button(t("new_agendamento"), use_container_width=True):
                 st.session_state.current_page = "agendamentos"; st.rerun()
-            if st.button(t('new_pagamento'), use_container_width=True):
+            if st.button(t("new_pagamento"), use_container_width=True):
                 st.session_state.current_page = "pagamentos"; st.rerun()
 
-        st.markdown(f'''<div class="version-tag">🕒 {datetime.now().strftime("%d/%m/%Y %H:%M")}<br>USER LOG CLAUDE v.2.0<br>© 2026 Aranhacorp</div>''', unsafe_allow_html=True)
+        st.markdown(
+            f'''<div class="version-tag">
+                🕒 {datetime.now().strftime("%d/%m/%Y %H:%M")}<br>
+                USER LOG CLAUDE v.3.0<br>
+                © 2026 Aranhacorp
+            </div>''',
+            unsafe_allow_html=True
+        )
         st.markdown("<br>", unsafe_allow_html=True)
         if st.button(f"🚪 {t('logout')}", use_container_width=True):
-            st.session_state.logged_in = False; st.rerun()
+            st.session_state.logged_in = False
+            st.rerun()
 
 # ================= DASHBOARD =================
 def dashboard():
-    page_header("📊", t('dashboard_title'))
-    c1,c2,c3,c4 = st.columns(4)
-    ativas = len([c for c in st.session_state.cargas if c.get('status') in ['agendada','em andamento']])
-    fat = sum(p.get('valor',0) for p in st.session_state.pagamentos if p.get('status')=='pago')
-    c1.metric(t('metric_cargas_ativas'), ativas)
-    c2.metric(t('metric_motoristas'), len(st.session_state.motoristas))
-    c3.metric(t('metric_clientes'), len(st.session_state.clientes))
-    c4.metric(t('metric_faturamento'), fmt_currency(fat))
+    page_header("📊", t("dashboard_title"))
+    c1, c2, c3, c4 = st.columns(4)
+    ativas = len([c for c in st.session_state.cargas
+                  if c.get("status") in ["agendada", "em andamento"]])
+    fat = sum(p.get("valor", 0) for p in st.session_state.pagamentos
+              if p.get("status") == "pago")
+    c1.metric(t("metric_cargas_ativas"), ativas)
+    c2.metric(t("metric_motoristas"), len(st.session_state.motoristas))
+    c3.metric(t("metric_clientes"), len(st.session_state.clientes))
+    c4.metric(t("metric_faturamento"), fmt_currency(fat))
+
     st.markdown("<br>", unsafe_allow_html=True)
-    col1, col2 = st.columns([1,1.2])
+    col1, col2 = st.columns([1, 1.2])
     with col1:
         st.markdown(f"**{t('chart_distribuicao')}**")
         if st.session_state.cargas:
             df = pd.DataFrame(st.session_state.cargas)
-            counts = df['status'].value_counts().reset_index(); counts.columns=['status','count']
-            fig = px.pie(counts, values='count', names='status', color_discrete_sequence=['#E8A020','#00C8A0','#6366F1','#EF4444'])
-            fig.update_layout(**plotly_theme()); fig.update_traces(textfont_color='white')
+            counts = df["status"].value_counts().reset_index()
+            counts.columns = ["status", "count"]
+            fig = px.pie(
+                counts, values="count", names="status",
+                color_discrete_sequence=["#E8A020","#00C8A0","#6366F1","#EF4444"]
+            )
+            fig.update_layout(**plotly_theme())
+            fig.update_traces(textfont_color="white")
             st.plotly_chart(fig, use_container_width=True)
         else:
-            st.info(t('no_cargas'))
+            st.info(t("no_cargas"))
+
     with col2:
         st.markdown(f"**{t('chart_proximos')}**")
         if st.session_state.agendamentos:
             df = pd.DataFrame(st.session_state.agendamentos)
-            cols = [c for c in ['data','cliente','origem','destino','status'] if c in df.columns]
+            cols = [c for c in ["data","cliente","origem","destino","status"] if c in df.columns]
             st.dataframe(df[cols].head(6), use_container_width=True, hide_index=True)
         else:
-            st.info(t('no_agendamentos'))
+            st.info(t("no_agendamentos"))
+
     st.markdown(f"<br>**{t('recent_activities')}**", unsafe_allow_html=True)
     has = False
     for p in st.session_state.pagamentos[-3:]:
-        st.markdown(f'''<div class="activity-row teal">💰 <strong>{t("pagamentos")}</strong> — {p.get("descricao","")} — {fmt_currency(p.get("valor",0))} &nbsp;{status_tag(p.get("status","pago"))}</div>''', unsafe_allow_html=True); has=True
+        st.markdown(
+            f'''<div class="activity-row teal">💰 <strong>{t("pagamentos")}</strong>
+            — {p.get("descricao","")} — {fmt_currency(p.get("valor",0))}
+            &nbsp;{status_tag(p.get("status","pago"))}</div>''',
+            unsafe_allow_html=True
+        )
+        has = True
     for c in st.session_state.cargas[-3:]:
-        st.markdown(f'''<div class="activity-row">📦 <strong>{t("mon_carga")} #{c["id"]}</strong> — {c.get("origem","")} → {c.get("destino","")} &nbsp;{status_tag(c.get("status","agendada"))}</div>''', unsafe_allow_html=True); has=True
+        st.markdown(
+            f'''<div class="activity-row">📦 <strong>{t("mon_carga")} #{c["id"]}</strong>
+            — {c.get("origem","")} → {c.get("destino","")}
+            &nbsp;{status_tag(c.get("status","agendada"))}</div>''',
+            unsafe_allow_html=True
+        )
+        has = True
     if not has:
-        st.info(t('no_activities'))
+        st.info(t("no_activities"))
 
 # ================= CLIENTES =================
 def clientes():
-    page_header("👥", t('clientes_title'))
-    tab1, tab2 = st.tabs(["➕ Novo", "📋 Lista"])
+    page_header("👥", t("clientes_title"))
+    tab1, tab2 = st.tabs([t("tab_novo"), t("tab_lista")])
     with tab1:
         with st.form("fc"):
-            c1,c2 = st.columns(2)
-            nome = c1.text_input(t('cliente_nome')); cpf = c1.text_input(t('cliente_cpf_cnpj'))
-            email = c2.text_input(t('cliente_email')); tel = c2.text_input(t('cliente_telefone'))
-            if st.form_submit_button(t('cliente_cadastrar'), use_container_width=True):
+            c1, c2 = st.columns(2)
+            nome = c1.text_input(t("cliente_nome"))
+            cpf  = c1.text_input(t("cliente_cpf_cnpj"))
+            email = c2.text_input(t("cliente_email"))
+            tel   = c2.text_input(t("cliente_telefone"))
+            if st.form_submit_button(t("cliente_cadastrar"), use_container_width=True):
                 if nome and cpf and email and tel:
-                    st.session_state.clientes.append({"id":len(st.session_state.clientes)+1,"nome":nome,"cpf_cnpj":cpf,"email":email,"telefone":tel,"data":datetime.now().strftime("%d/%m/%Y %H:%M")})
-                    salvar_dados(); st.success(t('cliente_cadastrado'))
-                else: st.error(t('cliente_erro'))
+                    st.session_state.clientes.append({
+                        "id": len(st.session_state.clientes)+1,
+                        "nome": nome, "cpf_cnpj": cpf,
+                        "email": email, "telefone": tel,
+                        "data": datetime.now().strftime("%d/%m/%Y %H:%M")
+                    })
+                    salvar_dados()
+                    st.success(t("cliente_cadastrado"))
+                else:
+                    st.error(t("cliente_erro"))
     with tab2:
         if st.session_state.clientes:
             df = pd.DataFrame(st.session_state.clientes)
-            busca = st.text_input("🔍", placeholder="Buscar...")
-            if busca: df = df[df.apply(lambda r: busca.lower() in str(r.values).lower(), axis=1)]
+            busca = st.text_input(t("buscar"), placeholder="Buscar...")
+            if busca:
+                df = df[df.apply(lambda r: busca.lower() in str(r.values).lower(), axis=1)]
             st.dataframe(df, use_container_width=True, hide_index=True)
-        else: st.info(t('no_data'))
+        else:
+            st.info(t("no_data"))
 
 # ================= MOTORISTAS =================
 def motoristas():
-    page_header("👨‍✈️", t('motoristas_title'))
-    tab1, tab2 = st.tabs(["➕ Novo", "📋 Lista"])
+    page_header("👨‍✈️", t("motoristas_title"))
+    tab1, tab2 = st.tabs([t("tab_novo"), t("tab_lista")])
     with tab1:
         with st.form("fm"):
-            c1,c2 = st.columns(2)
-            nome = c1.text_input(t('motorista_nome')); cnh = c1.text_input(t('motorista_cnh'))
-            tel = c2.text_input(t('motorista_telefone'))
-            status = c2.selectbox(t('motorista_status'),[t('status_disponivel'),t('status_viagem'),t('status_descanso')])
-            if st.form_submit_button(t('motorista_cadastrar'), use_container_width=True):
+            c1, c2 = st.columns(2)
+            nome   = c1.text_input(t("motorista_nome"))
+            cnh    = c1.text_input(t("motorista_cnh"))
+            tel    = c2.text_input(t("motorista_telefone"))
+            status = c2.selectbox(t("motorista_status"), [
+                t("status_disponivel"), t("status_viagem"), t("status_descanso")
+            ])
+            if st.form_submit_button(t("motorista_cadastrar"), use_container_width=True):
                 if nome and cnh and tel:
-                    st.session_state.motoristas.append({"id":len(st.session_state.motoristas)+1,"nome":nome,"cnh":cnh,"telefone":tel,"status":status,"data":datetime.now().strftime("%d/%m/%Y %H:%M")})
-                    salvar_dados(); st.success(t('motorista_cadastrado'))
-                else: st.error(t('cliente_erro'))
+                    st.session_state.motoristas.append({
+                        "id": len(st.session_state.motoristas)+1,
+                        "nome": nome, "cnh": cnh, "telefone": tel,
+                        "status": status,
+                        "data": datetime.now().strftime("%d/%m/%Y %H:%M")
+                    })
+                    salvar_dados()
+                    st.success(t("motorista_cadastrado"))
+                else:
+                    st.error(t("cliente_erro"))
     with tab2:
         if st.session_state.motoristas:
             df = pd.DataFrame(st.session_state.motoristas)
-            busca = st.text_input("🔍", placeholder="Buscar...")
-            if busca: df = df[df.apply(lambda r: busca.lower() in str(r.values).lower(), axis=1)]
-            disp = len([m for m in st.session_state.motoristas if m.get('status')==t('status_disponivel')])
-            viag = len([m for m in st.session_state.motoristas if m.get('status')==t('status_viagem')])
-            c1,c2,c3 = st.columns(3)
-            c1.metric("🟢 "+t('status_disponivel'), disp)
-            c2.metric("🔵 "+t('status_viagem'), viag)
-            c3.metric("🟡 "+t('status_descanso'), len(st.session_state.motoristas)-disp-viag)
+            busca = st.text_input(t("buscar"), placeholder="Buscar...")
+            if busca:
+                df = df[df.apply(lambda r: busca.lower() in str(r.values).lower(), axis=1)]
+            disp = len([m for m in st.session_state.motoristas
+                        if m.get("status") == t("status_disponivel")])
+            viag = len([m for m in st.session_state.motoristas
+                        if m.get("status") == t("status_viagem")])
+            c1, c2, c3 = st.columns(3)
+            c1.metric("🟢 "+t("status_disponivel"), disp)
+            c2.metric("🔵 "+t("status_viagem"), viag)
+            c3.metric("🟡 "+t("status_descanso"), len(st.session_state.motoristas)-disp-viag)
             st.dataframe(df, use_container_width=True, hide_index=True)
-        else: st.info(t('no_data'))
+        else:
+            st.info(t("no_data"))
 
 # ================= EMPRESAS =================
 def empresas():
-    page_header("🏢", t('empresas_title'))
-    tab1, tab2 = st.tabs(["➕ Nova", "📋 Lista"])
+    page_header("🏢", t("empresas_title"))
+    tab1, tab2 = st.tabs([t("tab_nova"), t("tab_lista")])
     with tab1:
         with st.form("fe"):
-            c1,c2 = st.columns(2)
-            razao=c1.text_input(t('empresa_razao')); fantasia=c1.text_input(t('empresa_fantasia')); cnpj=c1.text_input(t('empresa_cnpj'))
-            email=c2.text_input(t('empresa_email')); tel=c2.text_input(t('empresa_telefone'))
-            if st.form_submit_button(t('empresa_cadastrar'), use_container_width=True):
+            c1, c2 = st.columns(2)
+            razao    = c1.text_input(t("empresa_razao"))
+            fantasia = c1.text_input(t("empresa_fantasia"))
+            cnpj     = c1.text_input(t("empresa_cnpj"))
+            email    = c2.text_input(t("empresa_email"))
+            tel      = c2.text_input(t("empresa_telefone"))
+            if st.form_submit_button(t("empresa_cadastrar"), use_container_width=True):
                 if razao and fantasia and cnpj and email and tel:
-                    st.session_state.empresas.append({"id":len(st.session_state.empresas)+1,"razao_social":razao,"nome_fantasia":fantasia,"cnpj":cnpj,"email":email,"telefone":tel,"data":datetime.now().strftime("%d/%m/%Y %H:%M")})
-                    salvar_dados(); st.success(t('empresa_cadastrada'))
-                else: st.error(t('cliente_erro'))
+                    st.session_state.empresas.append({
+                        "id": len(st.session_state.empresas)+1,
+                        "razao_social": razao, "nome_fantasia": fantasia,
+                        "cnpj": cnpj, "email": email, "telefone": tel,
+                        "data": datetime.now().strftime("%d/%m/%Y %H:%M")
+                    })
+                    salvar_dados()
+                    st.success(t("empresa_cadastrada"))
+                else:
+                    st.error(t("cliente_erro"))
     with tab2:
         if st.session_state.empresas:
-            st.dataframe(pd.DataFrame(st.session_state.empresas), use_container_width=True, hide_index=True)
-        else: st.info(t('no_data'))
+            st.dataframe(pd.DataFrame(st.session_state.empresas),
+                         use_container_width=True, hide_index=True)
+        else:
+            st.info(t("no_data"))
 
 # ================= AGENDAMENTOS =================
 def agendamentos():
-    page_header("📦", t('agendamentos_title'))
-    tab1, tab2 = st.tabs(["➕ Novo", "📋 Lista"])
+    page_header("📦", t("agendamentos_title"))
+    tab1, tab2 = st.tabs([t("tab_novo"), t("tab_lista")])
     with tab1:
         with st.form("fa"):
-            c1,c2 = st.columns(2)
-            tipo = c1.selectbox(t('ag_tipo_transporte'),[t('ag_rodoviario'),t('ag_aereo')])
-            cli_list = [c['nome'] for c in st.session_state.clientes] or [t('no_data')]
-            cliente = c1.selectbox(t('ag_cliente'), cli_list)
-            mot_list = [m['nome'] for m in st.session_state.motoristas] or [t('no_data')]
-            motorista = c1.selectbox(t('ag_motorista'), mot_list)
-            origem = c1.text_input(t('ag_origem'))
-            destino = c2.text_input(t('ag_destino'))
-            data = c2.date_input(t('ag_data'), min_value=datetime.now().date(), format="DD/MM/YYYY")
-            hora = c2.time_input(t('ag_hora'))
-            peso = c2.number_input(t('ag_peso'), min_value=0.0, step=0.1)
-            if st.form_submit_button(t('ag_agendar'), use_container_width=True):
+            c1, c2 = st.columns(2)
+            tipo = c1.selectbox(t("ag_tipo_transporte"),
+                                [t("ag_rodoviario"), t("ag_aereo")])
+            cli_list = [c["nome"] for c in st.session_state.clientes] or [t("no_data")]
+            cliente  = c1.selectbox(t("ag_cliente"), cli_list)
+            mot_list = [m["nome"] for m in st.session_state.motoristas] or [t("no_data")]
+            motorista = c1.selectbox(t("ag_motorista"), mot_list)
+            origem  = c1.text_input(t("ag_origem"))
+            destino = c2.text_input(t("ag_destino"))
+            data    = c2.date_input(t("ag_data"),
+                                    min_value=datetime.now().date(), format="DD/MM/YYYY")
+            hora    = c2.time_input(t("ag_hora"))
+            peso    = c2.number_input(t("ag_peso"), min_value=0.0, step=0.1)
+            if st.form_submit_button(t("ag_agendar"), use_container_width=True):
                 if origem and destino and peso > 0:
-                    novo = {"id":len(st.session_state.agendamentos)+1,"tipo":tipo,"cliente":cliente,"motorista":motorista,"origem":origem,"destino":destino,"data":data.strftime("%d/%m/%Y"),"hora":hora.strftime("%H:%M"),"peso":peso,"status":"agendado","criado":datetime.now().strftime("%d/%m/%Y %H:%M")}
+                    novo = {
+                        "id": len(st.session_state.agendamentos)+1,
+                        "tipo": tipo, "cliente": cliente, "motorista": motorista,
+                        "origem": origem, "destino": destino,
+                        "data": data.strftime("%d/%m/%Y"),
+                        "hora": hora.strftime("%H:%M"),
+                        "peso": peso, "status": "agendado",
+                        "criado": datetime.now().strftime("%d/%m/%Y %H:%M")
+                    }
                     st.session_state.agendamentos.append(novo)
-                    st.session_state.cargas.append({"id":len(st.session_state.cargas)+1,"agendamento_id":novo["id"],"cliente":cliente,"motorista":motorista,"origem":origem,"destino":destino,"tipo_carga":tipo,"peso":peso,"status":"agendada","data_criacao":novo["criado"]})
-                    salvar_dados(); st.success(t('ag_sucesso'))
-                else: st.error(t('ag_erro'))
+                    st.session_state.cargas.append({
+                        "id": len(st.session_state.cargas)+1,
+                        "agendamento_id": novo["id"],
+                        "cliente": cliente, "motorista": motorista,
+                        "origem": origem, "destino": destino,
+                        "tipo_carga": tipo, "peso": peso,
+                        "status": "agendada",
+                        "data_criacao": novo["criado"]
+                    })
+                    salvar_dados()
+                    st.success(t("ag_sucesso"))
+                else:
+                    st.error(t("ag_erro"))
     with tab2:
         if st.session_state.agendamentos:
             df = pd.DataFrame(st.session_state.agendamentos)
-            busca = st.text_input("🔍", placeholder="Buscar...")
-            if busca: df = df[df.apply(lambda r: busca.lower() in str(r.values).lower(), axis=1)]
+            busca = st.text_input(t("buscar"), placeholder="Buscar...")
+            if busca:
+                df = df[df.apply(lambda r: busca.lower() in str(r.values).lower(), axis=1)]
             st.dataframe(df, use_container_width=True, hide_index=True)
             st.markdown("---")
-            st.markdown("**Atualizar status**")
-            col1,col2,col3 = st.columns(3)
-            ids = [a['id'] for a in st.session_state.agendamentos]
-            sel_id = col1.selectbox("ID", ids) if ids else None
-            novo_st = col2.selectbox("Status", ["agendado","em andamento","entregue","cancelado"])
+            st.markdown(f"**{t('atualizar_status')}**")
+            col1, col2, col3 = st.columns(3)
+            ids = [a["id"] for a in st.session_state.agendamentos]
+            sel_id  = col1.selectbox("ID", ids) if ids else None
+            novo_st = col2.selectbox("Status",
+                                     ["agendado","em andamento","entregue","cancelado"])
             col3.markdown("<br>", unsafe_allow_html=True)
-            if col3.button("Atualizar") and sel_id:
+            if col3.button(t("atualizar")) and sel_id:
                 for a in st.session_state.agendamentos:
-                    if a['id']==sel_id: a['status']=novo_st
+                    if a["id"] == sel_id:
+                        a["status"] = novo_st
                 for c in st.session_state.cargas:
-                    if c.get('agendamento_id')==sel_id: c['status']=novo_st if novo_st!="agendado" else "agendada"
-                salvar_dados(); st.success("✅ Atualizado!"); st.rerun()
-        else: st.info(t('no_data'))
+                    if c.get("agendamento_id") == sel_id:
+                        c["status"] = novo_st if novo_st != "agendado" else "agendada"
+                salvar_dados()
+                st.success("✅ Atualizado!")
+                st.rerun()
+        else:
+            st.info(t("no_data"))
 
 # ================= PAGAMENTOS =================
 def pagamentos():
-    page_header("💰", t('pagamentos_title'))
-    tab1, tab2 = st.tabs(["➕ Novo", "📋 Histórico"])
+    page_header("💰", t("pagamentos_title"))
+    tab1, tab2 = st.tabs([t("tab_novo"), t("tab_historico")])
     with tab1:
-        col1, col2 = st.columns([1.2,1])
+        col1, col2 = st.columns([1.2, 1])
         with col1:
             with st.form("fpag"):
-                valor = st.number_input(t('pag_valor'), min_value=0.01, step=10.0, value=100.0)
-                desc = st.text_input(t('pag_descricao'), placeholder="Frete SP-RJ...")
-                if st.form_submit_button(t('pag_gerar'), use_container_width=True):
+                valor = st.number_input(t("pag_valor"),
+                                        min_value=0.01, step=10.0, value=100.0)
+                desc  = st.text_input(t("pag_descricao"), placeholder="Frete SP-RJ...")
+                if st.form_submit_button(t("pag_gerar"), use_container_width=True):
                     if valor > 0 and desc:
                         try:
                             import qrcode
-                            chave = st.session_state.config_empresa['chave_pix']
+                            chave = st.session_state.config_empresa["chave_pix"]
                             qr = qrcode.QRCode(version=1, box_size=8, border=4)
-                            qr.add_data(f"PIX:{chave}:{valor}:{desc}"); qr.make(fit=True)
+                            qr.add_data(f"PIX:{chave}:{valor}:{desc}")
+                            qr.make(fit=True)
                             img = qr.make_image(fill_color="black", back_color="white")
                             buf = BytesIO(); img.save(buf, format="PNG")
                             b64 = base64.b64encode(buf.getvalue()).decode()
                             with col2:
-                                st.markdown(f'''<div style="background:white;padding:1rem;border-radius:12px;text-align:center"><img src="data:image/png;base64,{b64}" width="200"><p style="color:#111;font-size:0.8rem;margin-top:0.5rem">🔑 {chave}<br>💰 {fmt_currency(valor)}</p></div>''', unsafe_allow_html=True)
+                                st.markdown(
+                                    f'''<div style="background:white;padding:1rem;
+                                        border-radius:12px;text-align:center">
+                                        <img src="data:image/png;base64,{b64}" width="200">
+                                        <p style="color:#111;font-size:0.8rem;margin-top:0.5rem">
+                                        🔑 {chave}<br>💰 {fmt_currency(valor)}</p>
+                                    </div>''',
+                                    unsafe_allow_html=True
+                                )
                         except ImportError:
                             st.warning("Instale: pip install qrcode[pil]")
-                        st.session_state.pagamentos.append({"id":len(st.session_state.pagamentos)+1,"valor":valor,"descricao":desc,"data":datetime.now().strftime("%d/%m/%Y %H:%M"),"status":"pago"})
-                        salvar_dados(); st.success(t('pag_registrado'))
-                    else: st.error(t('pag_erro'))
+                        st.session_state.pagamentos.append({
+                            "id": len(st.session_state.pagamentos)+1,
+                            "valor": valor, "descricao": desc,
+                            "data": datetime.now().strftime("%d/%m/%Y %H:%M"),
+                            "status": "pago"
+                        })
+                        salvar_dados()
+                        st.success(t("pag_registrado"))
+                    else:
+                        st.error(t("pag_erro"))
     with tab2:
         if st.session_state.pagamentos:
             df = pd.DataFrame(st.session_state.pagamentos)
-            c1,c2 = st.columns(2)
-            c1.metric(t('rel_total_recebido'), fmt_currency(df['valor'].sum()))
+            c1, c2 = st.columns(2)
+            c1.metric(t("rel_total_recebido"), fmt_currency(df["valor"].sum()))
             c2.metric("Transações", len(df))
-            if len(df)>1:
-                fig = px.bar(df, x='data', y='valor', color_discrete_sequence=['#E8A020'], title="Histórico de Pagamentos")
-                fig.update_layout(**plotly_theme()); st.plotly_chart(fig, use_container_width=True)
+            if len(df) > 1:
+                fig = px.bar(df, x="data", y="valor",
+                             color_discrete_sequence=["#E8A020"],
+                             title=t("pag_lista"))
+                fig.update_layout(**plotly_theme())
+                st.plotly_chart(fig, use_container_width=True)
             st.dataframe(df, use_container_width=True, hide_index=True)
-        else: st.info(t('no_data'))
+        else:
+            st.info(t("no_data"))
 
 # ================= RELATÓRIOS =================
 def relatorios():
-    page_header("📈", t('relatorios_title'))
-    tipo = st.selectbox(t('rel_tipo'), [t('rel_cargas'),t('rel_pagamentos'),t('rel_motoristas')])
-    if tipo == t('rel_cargas'):
+    page_header("📈", t("relatorios_title"))
+    tipo = st.selectbox(t("rel_tipo"),
+                        [t("rel_cargas"), t("rel_pagamentos"), t("rel_motoristas")])
+    if tipo == t("rel_cargas"):
         if st.session_state.cargas:
             df = pd.DataFrame(st.session_state.cargas)
-            c1,c2,c3 = st.columns(3)
+            c1, c2, c3 = st.columns(3)
             c1.metric("Total", len(df))
-            c2.metric("Em andamento", len(df[df['status']=='em andamento']) if 'status' in df else 0)
-            c3.metric("Entregues", len(df[df['status']=='entregue']) if 'status' in df else 0)
-            fig = px.bar(df['status'].value_counts().reset_index(), x='status', y='count', color_discrete_sequence=['#E8A020','#00C8A0','#6366F1'])
-            fig.update_layout(**plotly_theme()); st.plotly_chart(fig, use_container_width=True)
+            c2.metric("Em andamento",
+                      len(df[df["status"]=="em andamento"]) if "status" in df else 0)
+            c3.metric("Entregues",
+                      len(df[df["status"]=="entregue"]) if "status" in df else 0)
+            fig = px.bar(
+                df["status"].value_counts().reset_index(),
+                x="status", y="count",
+                color_discrete_sequence=["#E8A020","#00C8A0","#6366F1"]
+            )
+            fig.update_layout(**plotly_theme())
+            st.plotly_chart(fig, use_container_width=True)
             st.dataframe(df, use_container_width=True, hide_index=True)
-        else: st.info(t('no_data'))
-    elif tipo == t('rel_pagamentos'):
+        else:
+            st.info(t("no_data"))
+    elif tipo == t("rel_pagamentos"):
         if st.session_state.pagamentos:
             df = pd.DataFrame(st.session_state.pagamentos)
-            st.metric(t('rel_total_recebido'), fmt_currency(df['valor'].sum()))
+            st.metric(t("rel_total_recebido"), fmt_currency(df["valor"].sum()))
             st.dataframe(df, use_container_width=True, hide_index=True)
-        else: st.info(t('no_data'))
-    elif tipo == t('rel_motoristas'):
+        else:
+            st.info(t("no_data"))
+    elif tipo == t("rel_motoristas"):
         if st.session_state.motoristas:
             df = pd.DataFrame(st.session_state.motoristas)
-            fig = px.pie(df['status'].value_counts().reset_index(), values='count', names='status', color_discrete_sequence=['#00C8A0','#E8A020','#6366F1'])
-            fig.update_layout(**plotly_theme()); st.plotly_chart(fig, use_container_width=True)
+            fig = px.pie(
+                df["status"].value_counts().reset_index(),
+                values="count", names="status",
+                color_discrete_sequence=["#00C8A0","#E8A020","#6366F1"]
+            )
+            fig.update_layout(**plotly_theme())
+            st.plotly_chart(fig, use_container_width=True)
             st.dataframe(df, use_container_width=True, hide_index=True)
-        else: st.info(t('no_data'))
+        else:
+            st.info(t("no_data"))
 
 # ================= MONITORAMENTO =================
 def monitoramento():
-    page_header("🛰️", t('monitoramento_title'))
-    filtro = st.multiselect(t('mon_status'), ["agendada","em andamento","entregue"], default=["agendada","em andamento"])
-    cargas = [c for c in st.session_state.cargas if c.get('status') in filtro]
+    page_header("🛰️", t("monitoramento_title"))
+    filtro = st.multiselect(
+        t("mon_status"),
+        ["agendada","em andamento","entregue"],
+        default=["agendada","em andamento"]
+    )
+    cargas = [c for c in st.session_state.cargas if c.get("status") in filtro]
     if cargas:
         for c in cargas:
-            s = c.get('status','agendada')
-            st.markdown(f'''<div class="load-card"><div class="load-id">CARGA #{c["id"]} · {c.get("tipo_carga","N/A")}</div><div class="load-title">📍 {c.get("origem","")} <span style="color:#6B7280">→</span> {c.get("destino","")}</div><div style="font-size:0.8rem;color:#6B7280;margin-top:0.2rem">🚚 {c.get("motorista","N/A")} · ⚖️ {c.get("peso",0)} kg · 👤 {c.get("cliente","N/A")}</div><div style="margin-top:0.5rem">{status_tag(s)}</div></div>''', unsafe_allow_html=True)
-    else: st.info(t('no_data'))
+            s = c.get("status","agendada")
+            st.markdown(
+                f'''<div class="load-card">
+                    <div class="load-id">CARGA #{c["id"]} · {c.get("tipo_carga","N/A")}</div>
+                    <div class="load-title">
+                        📍 {c.get("origem","")}
+                        <span style="color:#6B7280">→</span>
+                        {c.get("destino","")}
+                    </div>
+                    <div style="font-size:0.8rem;color:#6B7280;margin-top:0.2rem">
+                        🚚 {c.get("motorista","N/A")} · ⚖️ {c.get("peso",0)} kg
+                        · 👤 {c.get("cliente","N/A")}
+                    </div>
+                    <div style="margin-top:0.5rem">{status_tag(s)}</div>
+                </div>''',
+                unsafe_allow_html=True
+            )
+    else:
+        st.info(t("no_data"))
 
 # ================= CONFIGURAÇÕES =================
 def configuracoes():
-    page_header("⚙️", t('config_title'))
+    page_header("⚙️", t("config_title"))
     with st.form("cfg"):
         st.markdown(f"**{t('config_dados_empresa')}**")
-        c1,c2 = st.columns(2)
-        nome = c1.text_input(t('config_nome'), value=st.session_state.config_empresa.get('nome',''))
-        cnpj = c1.text_input(t('config_cnpj'), value=st.session_state.config_empresa.get('cnpj',''))
-        email = c1.text_input("E-mail", value=st.session_state.config_empresa.get('email',''))
-        pix = c2.text_input(t('config_chave_pix'), value=st.session_state.config_empresa.get('chave_pix',''))
-        tel = c2.text_input("Telefone", value=st.session_state.config_empresa.get('telefone',''))
-        end = c2.text_input("Endereço", value=st.session_state.config_empresa.get('endereco',''))
-        if st.form_submit_button(t('config_salvar'), use_container_width=True):
-            st.session_state.config_empresa.update({"nome":nome,"cnpj":cnpj,"email":email,"chave_pix":pix,"telefone":tel,"endereco":end})
-            salvar_dados(); st.success(t('config_sucesso'))
+        c1, c2 = st.columns(2)
+        nome  = c1.text_input(t("config_nome"),
+                              value=st.session_state.config_empresa.get("nome",""))
+        cnpj  = c1.text_input(t("config_cnpj"),
+                              value=st.session_state.config_empresa.get("cnpj",""))
+        email = c1.text_input("E-mail",
+                              value=st.session_state.config_empresa.get("email",""))
+        pix   = c2.text_input(t("config_chave_pix"),
+                              value=st.session_state.config_empresa.get("chave_pix",""))
+        tel   = c2.text_input("Telefone",
+                              value=st.session_state.config_empresa.get("telefone",""))
+        end   = c2.text_input("Endereço",
+                              value=st.session_state.config_empresa.get("endereco",""))
+        if st.form_submit_button(t("config_salvar"), use_container_width=True):
+            st.session_state.config_empresa.update({
+                "nome":nome,"cnpj":cnpj,"email":email,
+                "chave_pix":pix,"telefone":tel,"endereco":end
+            })
+            salvar_dados()
+            st.success(t("config_sucesso"))
+
     st.markdown("---")
-    st.markdown("**📁 Backup de dados**")
-    dados_json = json.dumps({"clientes":st.session_state.clientes,"motoristas":st.session_state.motoristas,"empresas":st.session_state.empresas,"cargas":st.session_state.cargas,"agendamentos":st.session_state.agendamentos,"pagamentos":st.session_state.pagamentos}, ensure_ascii=False, indent=2)
-    st.download_button("⬇️ Exportar dados (JSON)", data=dados_json, file_name=f"userlog_backup_{datetime.now().strftime('%Y%m%d_%H%M')}.json", mime="application/json", use_container_width=True)
+    st.markdown(f"**{t('backup')}**")
+    dados_json = json.dumps({
+        "clientes": st.session_state.clientes,
+        "motoristas": st.session_state.motoristas,
+        "empresas": st.session_state.empresas,
+        "cargas": st.session_state.cargas,
+        "agendamentos": st.session_state.agendamentos,
+        "pagamentos": st.session_state.pagamentos,
+    }, ensure_ascii=False, indent=2)
+    st.download_button(
+        t("exportar_json"),
+        data=dados_json,
+        file_name=f"userlog_backup_{datetime.now().strftime('%Y%m%d_%H%M')}.json",
+        mime="application/json",
+        use_container_width=True
+    )
 
 # ================= MAIN =================
 def main():
@@ -961,13 +1360,18 @@ def main():
         login_page()
     else:
         sidebar()
-        {
-            "dashboard": dashboard, "clientes": clientes,
-            "motoristas": motoristas, "empresas": empresas,
-            "agendamentos": agendamentos, "pagamentos": pagamentos,
-            "relatorios": relatorios, "monitoramento": monitoramento,
-            "config": configuracoes,
-        }.get(st.session_state.current_page, dashboard)()
+        pages = {
+            "dashboard":    dashboard,
+            "clientes":     clientes,
+            "motoristas":   motoristas,
+            "empresas":     empresas,
+            "agendamentos": agendamentos,
+            "pagamentos":   pagamentos,
+            "relatorios":   relatorios,
+            "monitoramento":monitoramento,
+            "config":       configuracoes,
+        }
+        pages.get(st.session_state.current_page, dashboard)()
 
 if __name__ == "__main__":
     main()
