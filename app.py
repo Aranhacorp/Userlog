@@ -14,8 +14,8 @@ import plotly.express as px
 
 # ================= CONFIGURAÇÃO DA PÁGINA =================
 st.set_page_config(
-    page_title="USER LOG CLAUDE v.3.0",
-    page_icon="🚛",
+    page_title="USER LOG",
+    page_icon="🔼",
     layout="wide",
     initial_sidebar_state="expanded"
 )
