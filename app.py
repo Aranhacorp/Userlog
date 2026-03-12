@@ -1,5 +1,5 @@
 """
-USER LOG CLAUDE v.3.0
+USER LOG CLAUDE
 Sistema de Transportes — Aranhacorp
 Visual premium, persistência JSON, imagem embutida
 Idioma padrão: Português
