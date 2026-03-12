@@ -52,7 +52,7 @@ def salvar_dados():
 # ================= TRADUÇÕES =================
 translations = {
     "pt": {
-        "app_name": "USER LOG CLAUDE v.3.0",
+        "app_name": "USER LOG",
         "welcome": "Bem-vindo",
         "login": "Entrar", "logout": "Sair",
         "username": "Usuário", "password": "Senha",
